@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by kibork on 1/22/2018.
+ * Created by kibork on 2/12/2018.
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface TypeScriptEndpoint {
-    String name() default "";
+@Target({ElementType.FIELD, ElementType.METHOD})
+public @interface TypeScriptIgnore {
+
 }

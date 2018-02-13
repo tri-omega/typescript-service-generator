@@ -68,19 +68,5 @@ public final class TypeUtils {
         return result;
     }
 
-    public static <T> List<T> getCompileTimeListValue(final AnnotationValue compileValue, final Class<T> clazz) {
-        final Object value = compileValue.getValue();
-        if (value instanceof Collection) {
-            final Collection<Object> col = (Collection)value;
-            return col.stream()
-                    .filter(v -> clazz.isAssignableFrom(v.getClass()))
-                    .map(v -> (T)v)
-                    .collect(Collectors.toList());
-
-        } else if (clazz.isAssignableFrom(value.getClass())) {
-            return Collections.singletonList((T)value);
-        }
-    }
-
 }
 

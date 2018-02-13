@@ -17,6 +17,8 @@ public class Endpoint {
 
     private String controllerClassName;
 
+    private String controllerName;
+
     private String baseUrl;
 
     private RequestMethod defaultHttpMethod;

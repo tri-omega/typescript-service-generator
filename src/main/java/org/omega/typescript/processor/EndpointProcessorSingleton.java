@@ -78,14 +78,13 @@ public final class EndpointProcessorSingleton {
                 .collect(toList());
     }
 
-    public void tryAcceptClass(final TypeElement type, final RoundEnvironment roundEnv, final ProcessingEnvironment processingEnv) {
+    private void tryAcceptClass(final TypeElement type, final RoundEnvironment roundEnv, final ProcessingEnvironment processingEnv) {
         final String className = type.getQualifiedName().toString().intern();
         if (endpointContainer.hasEndpoint(className)) {
-            //Concurent processing, skip the element
+            //Concurrent processing, skip the element
             return;
         }
         final ProcessingContext context = new ProcessingContext(roundEnv, processingEnv, oracle, endpointContainer);
-
-        EndpointDefinitionCreator.buildEndpoint(className, type, context);
+        endpointContainer.buildEndpoint(type, context);
     }
 }

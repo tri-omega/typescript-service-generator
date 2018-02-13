@@ -1,5 +1,7 @@
 package org.omega.typescript.processor;
 
+import org.omega.typescript.api.TypeScriptEndpoint;
+import org.omega.typescript.processor.builders.EndpointDefinitionBuilder;
 import org.omega.typescript.processor.model.Endpoint;
 
 import javax.lang.model.element.*;
@@ -35,10 +37,16 @@ public class EndpointContainer {
     }
 
     public Endpoint buildEndpoint(final TypeElement type, final ProcessingContext context) {
+        if (type.getAnnotation(TypeScriptEndpoint.class) == null) {
+            throw new IllegalArgumentException("Type is not an Type Script controller " + type.getQualifiedName());
+        }
         final String controllerClassName = type.getQualifiedName().toString().intern();
-        return endpointMap.computeIfAbsent(controllerClassName, (className) -> EndpointDefinitionCreator.buildEndpoint(className, type, context));
+        return endpointMap.computeIfAbsent(controllerClassName,
+            (className) ->
+                new EndpointDefinitionBuilder(context)
+                        .buildEndpoint(type)
+        );
     }
-
 
     public void clear() {
         endpointMap.clear();
