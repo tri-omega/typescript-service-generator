@@ -1,0 +1,13 @@
+.idea
+.gradle
+build/
+*.iml
+.DS_Store
+classes/
+*.ods#
+
+
+ListingProcessor/src/main/angular/ui/node_modules/
+ListingProcessor/src/main/resources/static/*.bundle.*
+ListingProcessor/src/main/angular/ui/e2e/*.js
+ListingProcessor/src/main/angular/ui/e2e/*.map

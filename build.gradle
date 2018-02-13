@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
+    }
+}
+
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+
+sourceCompatibility = 1.8
+version = '0.1'
+group = 'org.omega'
+archivesBaseName = 'typescript-service-gen'
+
+repositories {
+    mavenLocal();
+    mavenCentral();
+}
+
+ext.versions = [
+        spring: '4.3.5.RELEASE',
+        guava : '20.0',
+        junit : '5.0.1',
+        lombok: '1.16.20'
+]
+
+sourceSets {
+    test {
+        resources {
+            srcDirs = ["${projectDir}/src/test/java", "${projectDir}/src/test/resources"]
+            include '**/*'
+        }
+    }
+}
+
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    apt "org.projectlombok:lombok:${versions.lombok}"
+
+    testCompile "com.google.guava:guava:${versions.guava}"
+    testCompile 'com.google.testing.compile:compile-testing:0.10'
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:${versions.junit}")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${versions.junit}")
+
+    testCompile("org.springframework:spring-webmvc:${versions.spring}")
+
+}
+
