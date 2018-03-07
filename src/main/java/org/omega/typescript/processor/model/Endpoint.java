@@ -19,9 +19,7 @@ public class Endpoint {
 
     private String controllerName;
 
-    private String baseUrl;
-
-    private RequestMethod defaultHttpMethod;
+    private MappingDefinition mappingDefinition = new MappingDefinition();
 
     private List<EndpointMethod> endpointMethods = new ArrayList<>();
 

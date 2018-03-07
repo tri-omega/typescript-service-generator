@@ -2,10 +2,13 @@ package org.omega.typescript.processor.utils;
 
 import org.omega.typescript.processor.ProcessingContext;
 
+import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by kibork on 2/2/2018.
@@ -30,7 +33,7 @@ public final class TypeUtils {
                 .collect(Collectors.toList());
     }
 
-    public static Optional<? extends AnnotationMirror> getAnnotation(final Element element, final String annotationType, final ProcessingContext context) {
+    public static Optional<? extends AnnotationMirror> getAnnotation(final AnnotatedConstruct element, final String annotationType, final ProcessingContext context) {
         final List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
         return annotationMirrors.stream()
                 .filter(am -> annotationType.equals(getName(am)))
@@ -61,12 +64,47 @@ public final class TypeUtils {
                 .map(m -> (ExecutableElement) m)
                 .collect(Collectors.toList());
 
-        final List<ExecutableElement> result = methods.stream()
+        return methods.stream()
                 .filter(m -> m.getSimpleName().toString().startsWith("get") || m.getSimpleName().toString().startsWith("is"))
                 .collect(Collectors.toList());
-
-        return result;
     }
 
+    public static List<? extends AnnotationMirror> getAllAnnotations(final AnnotatedConstruct annotatedConstruct) {
+        final List<? extends AnnotationMirror> directAnnotations = annotatedConstruct.getAnnotationMirrors();
+        final List<? extends AnnotationMirror> derevedAnnotations = directAnnotations.stream()
+                .flatMap(am -> getAllAnnotations(am.getAnnotationType()).stream())
+                .collect(Collectors.toList());
+        return Stream.concat(directAnnotations.stream(), derevedAnnotations.stream())
+                .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> readAnnotationValueList(final AnnotationValue av, final ProcessingContext context) {
+        if (!(av.getValue() instanceof List)) {
+            final String msg = "Unable to read " + av + " as annotation value list";
+            return error(context, msg);
+        }
+        final Collection<AnnotationValue> values = (List<AnnotationValue>)av.getValue();
+        return values.stream()
+                .map(v -> readSimpleAnnotationValue(v, context))
+                .collect(Collectors.toList());
+    }
+
+    public static String readSimpleAnnotationValue(final AnnotationValue av, final ProcessingContext context) {
+        final Object value = av.getValue();
+        if ((value instanceof List) || (value instanceof TypeMirror)) {
+            error(context, "Unable to read " + av + " as simple value");
+        }
+        if (value instanceof VariableElement) {
+            final Element enumValue = (VariableElement)value;
+            return "" + enumValue.getSimpleName();
+        }
+        return "" + value;
+    }
+
+    private static List<String> error(ProcessingContext context, String msg) {
+        context.error(msg);
+        throw new IllegalArgumentException(msg);
+    }
 }
 

@@ -24,30 +24,32 @@ public class EndpointDefinitionBuilder {
 
     private final ProcessingContext context;
 
+    private final MappingDefinitionBuilder mappingDefinitionBuilder;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
 
-    public EndpointDefinitionBuilder(ProcessingContext context) {
+    public EndpointDefinitionBuilder(final ProcessingContext context) {
         this.context = context;
+        this.mappingDefinitionBuilder = new MappingDefinitionBuilder(context);
     }
 
     public Endpoint buildEndpoint(final TypeElement type) {
         final String controllerClassName = type.getQualifiedName().toString();
         final Endpoint endpoint = new Endpoint(controllerClassName);
 
+        endpoint.setMappingDefinition(mappingDefinitionBuilder.build(type));
+
         Optional.ofNullable(type.getAnnotation(TypeScriptEndpoint.class))
                 .ifPresent(annotation -> processMetadata(context, annotation, endpoint, type));
-
-        Optional.ofNullable(type.getAnnotation(RequestMapping.class))
-                .ifPresent(annotation -> processRequestMapping(controllerClassName, context, endpoint, annotation));
 
         final List<ExecutableElement> propertyGetters = TypeUtils.getPropertyGetters(type, context);
 
         return endpoint;
     }
 
-    private void processMetadata(final ProcessingContext context, final TypeScriptEndpoint annotation, final Endpoint endpoint, final TypeElement type) {
+    private void processMetadata(final ProcessingContext context, final TypeScriptEndpoint annotation, final Endpoint endpoint, final Element type) {
         final String userName = annotation.name();
         if (StringUtils.hasText(userName)) {
             endpoint.setControllerName(userName);
@@ -62,7 +64,7 @@ public class EndpointDefinitionBuilder {
             if (paths.length > 1) {
                 context.warning("Multiple paths are mapped for endpoint " + controllerClass + ", using the first one: " + paths[0]);
             }
-            endpoint.setBaseUrl(paths[0]);
+            endpoint.getMappingDefinition().setUrlTemplate(paths[0]);
         }
 
         final RequestMethod[] methods = Arrays.stream(containerDefaults.method())
@@ -73,7 +75,7 @@ public class EndpointDefinitionBuilder {
             if (methods.length > 1) {
                 context.warning("Multiple htp method types are mapped for endpoint " + controllerClass + ", using the first one: " + methods[0]);
             }
-            endpoint.setDefaultHttpMethod(methods[0]);
+            endpoint.getMappingDefinition().setRequestMethod(methods[0]);
         }
     }
 
