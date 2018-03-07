@@ -60,17 +60,31 @@ public final class TypeUtils {
     }
 
     public static List<ExecutableElement> getPropertyGetters(final TypeElement typeElement, final ProcessingContext context) {
-        final List<ExecutableElement> methods = TypeUtils.getMembers(typeElement, ElementKind.METHOD, context).stream()
-                .map(m -> (ExecutableElement) m)
-                .collect(Collectors.toList());
+        final List<ExecutableElement> methods = getMethods(typeElement, context);
 
         return methods.stream()
                 .filter(m -> m.getSimpleName().toString().startsWith("get") || m.getSimpleName().toString().startsWith("is"))
                 .collect(Collectors.toList());
     }
 
+    public static List<ExecutableElement> getMethods(TypeElement typeElement, ProcessingContext context) {
+        return TypeUtils.getMembers(typeElement, ElementKind.METHOD, context).stream()
+                    .map(m -> (ExecutableElement) m)
+                    .collect(Collectors.toList());
+    }
+
     public static List<? extends AnnotationMirror> getAllAnnotations(final AnnotatedConstruct annotatedConstruct) {
-        final List<? extends AnnotationMirror> directAnnotations = annotatedConstruct.getAnnotationMirrors();
+        final List<? extends AnnotationMirror> directAnnotations;
+        if (annotatedConstruct instanceof DeclaredType) {
+            final DeclaredType declaredType = (DeclaredType) annotatedConstruct;
+            final QualifiedNameable element = (QualifiedNameable)declaredType.asElement();
+            if (element.getQualifiedName().toString().startsWith("java.lang.annotation.")) {
+                return Collections.emptyList();
+            }
+            directAnnotations = element.getAnnotationMirrors();
+        } else {
+            directAnnotations = annotatedConstruct.getAnnotationMirrors();
+        }
         final List<? extends AnnotationMirror> derevedAnnotations = directAnnotations.stream()
                 .flatMap(am -> getAllAnnotations(am.getAnnotationType()).stream())
                 .collect(Collectors.toList());
@@ -102,7 +116,16 @@ public final class TypeUtils {
         return "" + value;
     }
 
-    private static List<String> error(ProcessingContext context, String msg) {
+    public static TypeMirror readClassAnnotationValue(final AnnotationValue av, final ProcessingContext context) {
+        final Object value = av.getValue();
+        if (!(value instanceof TypeMirror)) {
+            return error(context, "Unable to read " + av + " as Class Name Value");
+        } else {
+            return (TypeMirror) value;
+        }
+    }
+
+    private static <T> T error(ProcessingContext context, String msg) {
         context.error(msg);
         throw new IllegalArgumentException(msg);
     }

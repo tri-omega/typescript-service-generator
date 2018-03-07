@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kibork on 1/22/2018.
@@ -19,7 +20,7 @@ public class Endpoint {
 
     private String controllerName;
 
-    private MappingDefinition mappingDefinition = new MappingDefinition();
+    private Optional<MappingDefinition> mappingDefinition = Optional.empty();
 
     private List<EndpointMethod> endpointMethods = new ArrayList<>();
 

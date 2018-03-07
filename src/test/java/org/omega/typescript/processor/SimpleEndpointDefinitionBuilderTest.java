@@ -14,30 +14,34 @@ class SimpleEndpointDefinitionBuilderTest {
 
     @Test
     void buildEndpoint() {
-        final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass("/org/omega/typescript/processor/SimpleController.java");
+        final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass(
+                "/org/omega/typescript/processor/test/SimpleController.java"
+        );
 
         final Optional<Endpoint> endpointOption = endpointProcessorSingleton.getEndpointContainer()
                 .getEndpoint("org.omega.typescript.processor.test.SimpleController");
 
         Assert.assertTrue(endpointOption.isPresent());
         final Endpoint endpoint = endpointOption.get();
-        Assert.assertEquals(RequestMethod.POST, endpoint.getMappingDefinition().getRequestMethod());
+        Assert.assertTrue(endpoint.getMappingDefinition().isPresent());
+        Assert.assertEquals(RequestMethod.POST, endpoint.getMappingDefinition().get().getRequestMethod());
         Assert.assertEquals("SimpleController", endpoint.getControllerName());
-        Assert.assertEquals("/api/simple", endpoint.getMappingDefinition().getUrlTemplate());
+        Assert.assertEquals("/api/simple", endpoint.getMappingDefinition().get().getUrlTemplate());
         Assert.assertEquals("org.omega.typescript.processor.test.SimpleController", endpoint.getControllerClassName());
     }
 
     @Test
     void buildNamedEndpoint() {
-        final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass("/org/omega/typescript/processor/test/NamedSimpleController.java");
+        final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass(
+                "/org/omega/typescript/processor/test/NamedSimpleController.java"
+        );
 
         final Optional<Endpoint> endpointOption = endpointProcessorSingleton.getEndpointContainer()
                 .getEndpoint("org.omega.typescript.processor.test.NamedSimpleController");
         Assert.assertTrue(endpointOption.isPresent());
         final Endpoint endpoint = endpointOption.get();
         Assert.assertEquals("NamedController", endpoint.getControllerName());
-        Assert.assertNull(endpoint.getMappingDefinition().getRequestMethod());
-        Assert.assertNull(endpoint.getMappingDefinition().getUrlTemplate());
+        Assert.assertFalse(endpoint.getMappingDefinition().isPresent());
         Assert.assertEquals("org.omega.typescript.processor.test.NamedSimpleController", endpoint.getControllerClassName());
     }
 }

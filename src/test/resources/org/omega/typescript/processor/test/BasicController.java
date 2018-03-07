@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.test;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
+import org.omega.typescript.api.TypeScriptName;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,7 +25,7 @@ public class BasicController {
         return null;
     }
 
-    @GetMapping(path = "get")
+    @GetMapping(path = "getP")
     public String getByElementIdAsParam(@RequestParam long id) {
         return null;
     }
@@ -54,6 +55,11 @@ public class BasicController {
         return null;
     }
 
+    @PutMapping(path = "put")
+    public String putDataAsBody(@RequestBody String data) {
+        return null;
+    }
+
     @DeleteMapping(path = "delete")
     public String deleteById(@RequestParam long id) {
         return null;
@@ -62,6 +68,12 @@ public class BasicController {
     @PatchMapping(path = "patch")
     public String patchById(@RequestParam long id) {
          return null;
+    }
+
+    @CustomMapping
+    @TypeScriptName("typeScriptMethodName")
+    public String customMethod() {
+        return null;
     }
 
 }

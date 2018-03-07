@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,19 +10,18 @@ import java.util.List;
  * Created by kibork on 2/2/2018.
  */
 @Data
+@ToString(exclude = "endpoint")
 public class EndpointMethod {
 
     // ------------------ Constants  --------------------
 
     // ------------------ Fields     --------------------
 
-    private Endpoint endpoint;
+    private final Endpoint endpoint;
 
-    private String methodName;
+    private final String methodName;
 
-    private String urlTemplate;
-
-    private RequestMethod requestMethod;
+    private final MappingDefinition mappingDefinition;
 
     private TypeDefinition returnType;
 
@@ -30,5 +30,5 @@ public class EndpointMethod {
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
-
+        
 }
