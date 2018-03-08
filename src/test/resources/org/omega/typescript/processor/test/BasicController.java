@@ -20,7 +20,7 @@ public class BasicController {
 
     // ------------------ Logic      --------------------
 
-    @RequestMapping(path = "get")
+    @RequestMapping("get")
     public String getByElementIdAsNamedParam(@RequestParam("elementId") long id) {
         return null;
     }
@@ -40,7 +40,7 @@ public class BasicController {
         return null;
     }
 
-    @PostMapping(path = "post")
+    @PostMapping("post")
     public String postDataAsBody(@RequestBody String data) {
         return null;
     }

@@ -42,55 +42,102 @@ public final class AnnotationUtils {
         boolean found = false;
         final ResolvedAnnotationValues result = new ResolvedAnnotationValues(expectedClassName);
 
+        final TypeElement targetAnnotationMirror = context.getProcessingEnv().getElementUtils()
+                .getTypeElement(expectedClassName);
+
         for (final AnnotationMirror annotation : annotationMirrors) {
-            final Map<? extends ExecutableElement, ? extends AnnotationValue> values = context.getProcessingEnv()
-                    .getElementUtils()
-                    .getElementValuesWithDefaults(annotation);
+            final Map<? extends ExecutableElement, ? extends AnnotationValue> values = annotation.getElementValues();
+                    //context.getProcessingEnv().getElementUtils().getElementValuesWithDefaults(annotation); //This doesn't play nice with aliasing...
 
             if (result.isTargetClass(annotation)) {
                 found = true;
                 values.forEach((property, value) ->
-                        result.getValueMap().putIfAbsent(getAnnotationPropertyName(property), value)
-                );
-
+                        setPropertyAndAliases(context, result, property, value, null, targetAnnotationMirror));
             } else {
-                found |= checkForAliasedProperties(context, result, values);
+                found |= checkForAliasedProperties(context, result, values, false, targetAnnotationMirror);
             }
 
         }
 
         return !found ? Optional.empty() : Optional.of(result);
-
     }
 
-    private static boolean checkForAliasedProperties(ProcessingContext context, ResolvedAnnotationValues result, Map<? extends ExecutableElement, ? extends AnnotationValue> values) {
+    private static void setPropertyAndAliases(final ProcessingContext context, final ResolvedAnnotationValues result,
+              final ExecutableElement valueElement, final AnnotationValue value, final AnnotationMirror aliasForMirror, final TypeElement targetAnnotationType) {
+        final String propertyName = getAliasedPropName(context, valueElement, aliasForMirror);
+
+        final boolean newValue = result.getValueMap()
+                .putIfAbsent(propertyName, value) == null;
+
+        if (!newValue) {
+            return;
+        }
+
+        //Check if the target property has an alias
+        final ExecutableElement targetProperyElement = targetAnnotationType.getEnclosedElements().stream()
+                .filter(e -> propertyName.equals(e.getSimpleName().toString()))
+                .filter(e -> e instanceof ExecutableElement)
+                .map(e -> (ExecutableElement)e)
+                .findFirst().orElse(null);
+
+        if (targetProperyElement == null) {
+            return;
+        }
+        checkPropertyForAlias(context, result, targetProperyElement, value, true, targetAnnotationType);
+    }
+
+    private static boolean checkForAliasedProperties(ProcessingContext context, ResolvedAnnotationValues result,
+                                                     Map<? extends ExecutableElement, ? extends AnnotationValue> values,
+                                                     boolean localToClass, TypeElement targetAnnotationMirror) {
         final AtomicBoolean found = new AtomicBoolean(false);
         values.forEach((valueElement, value) -> {
             //How deep does the rabbit hole go? Can you create meta annotations for AliasFor? Who knows...
-            final Optional<? extends AnnotationMirror> aliasForOption = getAnnotation(valueElement, AliasFor.class.getName(), context);
-            if (aliasForOption.isPresent()) {
-                final boolean isMatch = processAliasedProperty(context, result, valueElement, value, found, aliasForOption.get());
-                if (isMatch) {
-                    found.set(true);
-                }
+            final boolean hasFound = checkPropertyForAlias(context, result, valueElement, value, localToClass, targetAnnotationMirror);
+            if (hasFound) {
+                found.set(true);
             }
         });
         return found.get();
     }
 
-    private static boolean processAliasedProperty(ProcessingContext context, ResolvedAnnotationValues result, ExecutableElement valueElement, AnnotationValue value, AtomicBoolean found, AnnotationMirror aliasForMirror) {
+    private static boolean checkPropertyForAlias(ProcessingContext context, ResolvedAnnotationValues result, ExecutableElement valueElement,
+                                                 AnnotationValue value, boolean localToClass, final TypeElement targetAnnotationMirror) {
+        final Optional<? extends AnnotationMirror> aliasForOption = getAnnotation(valueElement, AliasFor.class.getName(), context);
+        if (aliasForOption.isPresent()) {
+            return processAliasedProperty(context, result, valueElement, value, aliasForOption.get(), localToClass, targetAnnotationMirror);
+        }
+        return false;
+    }
+
+    private static boolean processAliasedProperty(ProcessingContext context, ResolvedAnnotationValues result,
+                                                  ExecutableElement valueElement, AnnotationValue value, AnnotationMirror aliasForMirror,
+                                                  final boolean localToClass, final  TypeElement targetAnnotationMirror) {
         final String targetClass = getAliasAnnotationClassName(aliasForMirror, context);
 
-        if (result.isTargetClass(targetClass)) {
-            final String attribute = getValue(aliasForMirror, "attribute", context)
-                    .map(av -> readSimpleAnnotationValue(av, context))
-                    .orElse(getAnnotationPropertyName(valueElement));
-
-            result.getValueMap().putIfAbsent(attribute, value);
+        if ((result.isTargetClass(targetClass)) | (((!StringUtils.hasText(targetClass)) && (localToClass)))) {
+            setPropertyAndAliases(context, result, valueElement, value, aliasForMirror, targetAnnotationMirror);
             return true;
         } else {
             return false;
         }
+    }
+
+    private static String getAliasedPropName(ProcessingContext context, ExecutableElement valueElement, AnnotationMirror aliasForMirror) {
+        if (aliasForMirror == null) {
+            return getAnnotationPropertyName(valueElement);
+        }
+        final String attribute = getValue(aliasForMirror, "attribute", context)
+                .map(av -> readSimpleAnnotationValue(av, context)).orElse(null);
+        final String valueAttribute = getValue(aliasForMirror, "value", context)
+                .map(av -> readSimpleAnnotationValue(av, context)).orElse(null);
+
+        if (StringUtils.hasText(attribute)) {
+            return attribute;
+        } else if (StringUtils.hasText(valueAttribute)) {
+            return valueAttribute;
+        }
+        
+        return getAnnotationPropertyName(valueElement);
     }
 
     private static String getAnnotationPropertyName(ExecutableElement property) {
