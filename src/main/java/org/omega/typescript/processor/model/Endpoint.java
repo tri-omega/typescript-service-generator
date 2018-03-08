@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.model;
 
 import lombok.Data;
+import org.omega.typescript.processor.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,5 +31,11 @@ public class Endpoint {
 
     public Endpoint(String controllerClassName) {
         this.controllerClassName = controllerClassName;
+    }
+
+    public Optional<EndpointMethod> getMethod(final String name) {
+        return endpointMethods.stream()
+                .filter(m -> StringUtils.equals(name, m.getMethodName()))
+                .findAny();
     }
 }

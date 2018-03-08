@@ -9,6 +9,7 @@ import org.omega.typescript.processor.utils.StringUtils;
 
 import javax.lang.model.element.ExecutableElement;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by kibork on 3/6/2018.
@@ -23,6 +24,8 @@ public class MethodDefinitionBuilder {
 
     private final MappingDefinitionBuilder mappingDefinitionBuilder;
 
+    private final MethodParameterBuilder methodParameterBuilder;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -30,6 +33,7 @@ public class MethodDefinitionBuilder {
     public MethodDefinitionBuilder(final ProcessingContext context, final MappingDefinitionBuilder mappingDefinitionBuilder) {
         this.context = context;
         this.mappingDefinitionBuilder = mappingDefinitionBuilder;
+        this.methodParameterBuilder = new MethodParameterBuilder(context);
     }
 
     public Optional<EndpointMethod> build(final Endpoint endpoint, final ExecutableElement methodElement) {
@@ -43,6 +47,14 @@ public class MethodDefinitionBuilder {
         final EndpointMethod method = new EndpointMethod(endpoint, methodName, mappingDefinitionOption.get());
 
         defaultRequestMethod(endpoint, method);
+
+        method.setParams(methodElement.getParameters().stream()
+                .map(p -> methodParameterBuilder.builder(method, p))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList())
+        );
+
 
         return Optional.of(method);
     }

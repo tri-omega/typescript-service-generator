@@ -47,7 +47,6 @@ public class MappingDefinitionBuilder {
         final MappingDefinition result = new MappingDefinition();
 
         final ResolvedAnnotationValues annotationValues = foundAnnotation.get();
-        annotationValues.getValue("value").ifPresent(av -> readUrl(element, result, av));
         annotationValues.getValue("path").ifPresent(av -> readUrl(element, result, av));
 
         annotationValues.getValue("method").ifPresent(av -> readRequestMethod(element, result, av));

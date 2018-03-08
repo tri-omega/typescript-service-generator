@@ -21,7 +21,7 @@ public class BasicController {
     // ------------------ Logic      --------------------
 
     @RequestMapping("get")
-    public String getByElementIdAsNamedParam(@RequestParam("elementId") long id) {
+    public String getByElementIdAsNamedParam(@RequestParam(value = "elementId", required = false) long id) {
         return null;
     }
 
@@ -56,7 +56,7 @@ public class BasicController {
     }
 
     @PutMapping(path = "put")
-    public String putDataAsBody(@RequestBody String data) {
+    public String putDataAsBody(@RequestBody(required = false) String data) {
         return null;
     }
 

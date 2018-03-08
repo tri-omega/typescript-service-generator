@@ -2,13 +2,11 @@ package org.omega.typescript.processor.model;
 
 import lombok.Data;
 
-import java.util.Optional;
-
 /**
- * Created by kibork on 2/2/2018.
+ * Created by kibork on 3/7/2018.
  */
 @Data
-public class MethodParameter {
+public class VariableDefinition {
 
     // ------------------ Constants  --------------------
 
@@ -16,18 +14,11 @@ public class MethodParameter {
 
     private final String name;
 
-    private final EndpointMethod method;
-
-    private TypeDefinition type;
-
-    private Optional<VariableDefinition> pathVariableName;
-
-    private Optional<VariableDefinition> requestParameterName;
-
-    private Optional<VariableDefinition> requestBody;
+    private boolean required = true;
 
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
+
 
 }
