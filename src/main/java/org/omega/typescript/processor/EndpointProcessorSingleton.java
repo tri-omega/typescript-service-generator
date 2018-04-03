@@ -1,7 +1,6 @@
 package org.omega.typescript.processor;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
-import org.omega.typescript.processor.model.Endpoint;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -9,10 +8,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,7 +26,6 @@ public final class EndpointProcessorSingleton {
     private EndpointContainer endpointContainer = new EndpointContainer();
 
     private TypeOracle oracle = new TypeOracle();
-
 
     // ------------------ Properties --------------------
 
@@ -85,6 +80,7 @@ public final class EndpointProcessorSingleton {
             return;
         }
         final ProcessingContext context = new ProcessingContext(roundEnv, processingEnv, oracle, endpointContainer);
+        oracle.initContext(context);
         endpointContainer.buildEndpoint(type, context);
     }
 }

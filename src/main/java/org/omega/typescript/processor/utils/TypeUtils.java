@@ -2,10 +2,9 @@ package org.omega.typescript.processor.utils;
 
 import org.omega.typescript.processor.ProcessingContext;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,5 +45,21 @@ public final class TypeUtils {
                     .collect(Collectors.toList());
     }
 
+    public static String getClassName(TypeElement typeElement) {
+        return typeElement.getQualifiedName().toString();
+    }
+
+    public static String getClassName(final TypeMirror typeMirror, final ProcessingContext context) {
+        if (typeMirror.getKind().isPrimitive()) {
+            return typeMirror.toString();
+        } 
+        final Types typeUtils = context.getProcessingEnv().getTypeUtils();
+        final Element element = typeUtils.asElement(typeMirror);
+        if (element instanceof QualifiedNameable) {
+            final QualifiedNameable nameable = (QualifiedNameable)element;
+            return nameable.getQualifiedName().toString();
+        }
+        return element.getSimpleName().toString();
+    }
 }
 
