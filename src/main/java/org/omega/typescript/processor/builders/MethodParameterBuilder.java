@@ -3,7 +3,7 @@ package org.omega.typescript.processor.builders;
 import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.EndpointMethod;
 import org.omega.typescript.processor.model.MethodParameter;
-import org.omega.typescript.processor.model.VariableDefinition;
+import org.omega.typescript.processor.model.PathVariableDefinition;
 import org.omega.typescript.processor.utils.AnnotationUtils;
 import org.omega.typescript.processor.utils.ResolvedAnnotationValues;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,9 +53,9 @@ public class MethodParameterBuilder {
         return Optional.of(param);
     }
 
-    private Optional<VariableDefinition> readVariableDef(Optional<ResolvedAnnotationValues> requestParamOption, String paramName) {
+    private Optional<PathVariableDefinition> readVariableDef(Optional<ResolvedAnnotationValues> requestParamOption, String paramName) {
         return requestParamOption.map(av ->
-                new VariableDefinition(av.readString("name", paramName, context))
+                new PathVariableDefinition(av.readString("name", paramName, context))
                         .setRequired(av.readBoolean("required", true, context))
         );
     }

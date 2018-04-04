@@ -21,6 +21,8 @@ public class TypeDefinitionBuilder {
 
     private final ProcessingContext context;
 
+    private final PropertyDefinitionBuilder propertyDefinitionBuilder;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -28,6 +30,7 @@ public class TypeDefinitionBuilder {
 
     public TypeDefinitionBuilder(final ProcessingContext context) {
         this.context = context;
+        this.propertyDefinitionBuilder = new PropertyDefinitionBuilder(context);
     }
 
     public TypeDefinition buildClassDefinition(final TypeElement type) {
@@ -48,6 +51,10 @@ public class TypeDefinitionBuilder {
     private void initializeTypeDefinition(final TypeDefinition typeDefinition, final TypeElement typeElement) {
         typeDefinition.setTypeKind(fromElementKind(typeElement.getKind(), typeElement));
         typeDefinition.setTypeScriptName(getTypeScriptName(typeDefinition, typeElement));
+        typeDefinition.getProperties()
+                .addAll(
+                        propertyDefinitionBuilder.buildPropertyGetters(typeElement)
+                );
     }
 
     private String getTypeScriptName(TypeDefinition typeDefinition, TypeElement element) {
@@ -70,6 +77,4 @@ public class TypeDefinitionBuilder {
         }
         return TypeKind.UNKNOWN;
     }
-
-
 }

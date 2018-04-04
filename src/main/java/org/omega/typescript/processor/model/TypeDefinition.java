@@ -29,6 +29,8 @@ public class TypeDefinition {
 
     private boolean predefined = false;
 
+    private List<PropertyDefinition> properties = new ArrayList<>();
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------

@@ -6,7 +6,7 @@ import lombok.Data;
  * Created by kibork on 3/7/2018.
  */
 @Data
-public class VariableDefinition {
+public class PathVariableDefinition {
 
     // ------------------ Constants  --------------------
 

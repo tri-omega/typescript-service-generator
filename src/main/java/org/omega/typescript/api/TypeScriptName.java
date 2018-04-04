@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Created by kibork on 3/6/2018.
  */
 @Target({ElementType.METHOD})
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface TypeScriptName {
 
     String value() default "";

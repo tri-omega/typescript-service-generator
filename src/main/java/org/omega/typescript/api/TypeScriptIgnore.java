@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Created by kibork on 2/12/2018.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface TypeScriptIgnore {
 }

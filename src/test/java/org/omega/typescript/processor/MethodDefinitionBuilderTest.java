@@ -56,13 +56,13 @@ public class MethodDefinitionBuilderTest {
     }
 
 
-    private void checkVar(Optional<VariableDefinition> parameterName, String elementId, boolean b) {
-        final VariableDefinition vd = parameterName.orElseThrow(IllegalArgumentException::new);
+    private void checkVar(Optional<PathVariableDefinition> parameterName, String elementId, boolean b) {
+        final PathVariableDefinition vd = parameterName.orElseThrow(IllegalArgumentException::new);
         Assert.assertEquals(elementId, vd.getName());
         Assert.assertEquals(b, vd.isRequired());
     }
 
-    private void checkParam(MethodParameter param, String readParamName, String requestParamName, boolean isRequired, Optional<VariableDefinition> paramType) {
+    private void checkParam(MethodParameter param, String readParamName, String requestParamName, boolean isRequired, Optional<PathVariableDefinition> paramType) {
         Assert.assertEquals(readParamName, param.getName());
 
         final boolean isRequestParam = param.getRequestParameterName() == paramType;

@@ -20,11 +20,11 @@ public class MethodParameter {
 
     private TypeDefinition type;
 
-    private Optional<VariableDefinition> pathVariableName;
+    private Optional<PathVariableDefinition> pathVariableName;
 
-    private Optional<VariableDefinition> requestParameterName;
+    private Optional<PathVariableDefinition> requestParameterName;
 
-    private Optional<VariableDefinition> requestBody;
+    private Optional<PathVariableDefinition> requestBody;
 
     // ------------------ Properties --------------------
 

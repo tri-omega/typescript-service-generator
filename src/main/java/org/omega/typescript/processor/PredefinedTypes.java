@@ -3,6 +3,9 @@ package org.omega.typescript.processor;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * Created by kibork on 3/12/2018.
  */
@@ -17,25 +20,36 @@ public class PredefinedTypes {
     // ------------------ Logic      --------------------
 
     public static void registerTypes(final TypeOracle typeOracle) {
-        typeOracle.addType(
-                new TypeDefinition("java.lang.String", "String")
-                    .setTypeKind(TypeKind.PRIMITIVE)
-                    .setPredefined(true)
-                    .setTypeScriptName("string")
-        );
+        addPrimitive(typeOracle, Object.class, "any");
 
-        typeOracle.addType(
-                new TypeDefinition("java.lang.Long", "Long")
-                    .setTypeKind(TypeKind.PRIMITIVE)
-                    .setPredefined(true)
-                    .setTypeScriptName("number")
-        );
+        addPrimitive(typeOracle, String.class, "string");
 
+        addPrimitive(typeOracle, Long.class, "number");
+        addPrimitive(typeOracle, Integer.class, "number");
+        addPrimitive(typeOracle, Short.class, "number");
+        addPrimitive(typeOracle, Byte.class, "number");
+
+        addPrimitive(typeOracle, "long", "long", "number");
+        addPrimitive(typeOracle, "int", "int", "number");
+        addPrimitive(typeOracle, "short", "short", "number");
+        addPrimitive(typeOracle, "byte", "byte", "number");
+        addPrimitive(typeOracle, "double", "double", "number");
+        addPrimitive(typeOracle, "float", "double", "number");
+
+        addPrimitive(typeOracle, BigDecimal.class,"number");
+        addPrimitive(typeOracle, BigInteger.class,"number");
+    }
+
+    private static void addPrimitive(final TypeOracle typeOracle, final Class<?> clazz, String tsTypeName) {
+        addPrimitive(typeOracle, clazz.getName(), clazz.getSimpleName(), tsTypeName);
+    }
+
+    private static void addPrimitive(final TypeOracle typeOracle, final String fullTypeName, String shortTypeName, String tsTypeName) {
         typeOracle.addType(
-                new TypeDefinition("long", "long")
+                new TypeDefinition(fullTypeName, shortTypeName)
                         .setTypeKind(TypeKind.PRIMITIVE)
                         .setPredefined(true)
-                        .setTypeScriptName("number")
+                        .setTypeScriptName(tsTypeName)
         );
     }
 

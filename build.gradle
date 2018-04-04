@@ -23,8 +23,8 @@ group = 'org.omega'
 archivesBaseName = 'typescript-service-gen'
 
 repositories {
-    mavenLocal();
-    mavenCentral();
+    mavenLocal()
+    mavenCentral()
 }
 
 ext.versions = [
@@ -33,6 +33,13 @@ ext.versions = [
         junit : '5.0.1',
         lombok: '1.16.20'
 ]
+
+idea {
+    module {
+        // Marks the already(!) added srcDir as "generated"
+        generatedSourceDirs += file( "${projectDir}/src/test/resources")
+    }
+}
 
 sourceSets {
     test {

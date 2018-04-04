@@ -102,11 +102,10 @@ public final class AnnotationUtils {
 
     private static boolean checkPropertyForAlias(ProcessingContext context, ResolvedAnnotationValues result, ExecutableElement valueElement,
                                                  AnnotationValue value, boolean localToClass, final TypeElement targetAnnotationMirror) {
-        final Optional<? extends AnnotationMirror> aliasForOption = getAnnotation(valueElement, AliasFor.class.getName(), context);
-        if (aliasForOption.isPresent()) {
-            return processAliasedProperty(context, result, valueElement, value, aliasForOption.get(), localToClass, targetAnnotationMirror);
-        }
-        return false;
+        final Optional<? extends AnnotationMirror> aliasForOption = getAnnotation(valueElement, AliasFor.class.getName());
+        return aliasForOption
+                .filter(annotationMirror -> processAliasedProperty(context, result, valueElement, value, annotationMirror, localToClass, targetAnnotationMirror))
+                .isPresent();
     }
 
     private static boolean processAliasedProperty(ProcessingContext context, ResolvedAnnotationValues result,
@@ -156,11 +155,15 @@ public final class AnnotationUtils {
                 .orElse("");
     }
 
-    public static Optional<? extends AnnotationMirror> getAnnotation(final AnnotatedConstruct element, final String annotationType, final ProcessingContext context) {
+    public static Optional<? extends AnnotationMirror> getAnnotation(final AnnotatedConstruct element, final String annotationType) {
         final List<? extends AnnotationMirror> annotationMirrors = element.getAnnotationMirrors();
         return annotationMirrors.stream()
                 .filter(am -> annotationType.equals(getName(am)))
                 .findFirst();
+    }
+
+    public static Optional<? extends AnnotationMirror> getAnnotation(final AnnotatedConstruct element, final Class<?> annotationType) {
+        return getAnnotation(element, annotationType.getName());
     }
 
     public static String getName(final AnnotationMirror am) {
