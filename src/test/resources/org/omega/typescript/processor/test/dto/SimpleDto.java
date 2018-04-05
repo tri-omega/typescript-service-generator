@@ -20,6 +20,10 @@ public class SimpleDto {
 
     private int field4;
 
+    private int field5;
+
+    private int field6;
+
     // ------------------ Properties --------------------
 
     public String getField1() {
@@ -60,6 +64,15 @@ public class SimpleDto {
         return this;
     }
 
-// ------------------ Logic      --------------------
+    protected int getField5() {
+        return field5;
+    }
+
+    public SimpleDto setField5(int field5) {
+        this.field5 = field5;
+        return this;
+    }
+
+    // ------------------ Logic      --------------------
 
 }

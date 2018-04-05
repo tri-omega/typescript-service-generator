@@ -10,6 +10,7 @@ import org.omega.typescript.processor.utils.TypeUtils;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +47,8 @@ public class PropertyDefinitionBuilder {
         //Selects only "own" getters of the class
         final List<ExecutableElement> getters = methods.stream()
                 .filter(e -> e.getEnclosingElement() == typeElement)
+                .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
+                .filter(e -> !e.getModifiers().contains(Modifier.TRANSIENT))
                 .filter(this::isGetter)
                 .filter(e -> !AnnotationUtils.getAnnotation(e, TypeScriptIgnore.class).isPresent())
                 .collect(Collectors.toList());
