@@ -32,10 +32,10 @@ public class SimpleEnumBuilderTest {
     @Test
     public void testSimpleProperties() {
         final Endpoint endpoint = getEndpoint();
-        final EndpointMethod getSimpleDto = endpoint.getMethod("get")
+        final EndpointMethod get = endpoint.getMethod("get")
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
-        final TypeDefinition type = getSimpleDto.getReturnType();
+        final TypeDefinition type = get.getReturnType();
         assertEquals(TypeKind.ENUM, type.getTypeKind());
 
         assertEquals(2, type.getEnumConstants().size());

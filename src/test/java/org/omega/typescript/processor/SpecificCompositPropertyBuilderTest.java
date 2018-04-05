@@ -9,6 +9,7 @@ import org.omega.typescript.processor.model.TypeDefinition;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.omega.typescript.processor.TestUtils.checkProperty;
 
 /**
  * Created by kibork on 4/3/2018.
@@ -63,12 +64,6 @@ public class SpecificCompositPropertyBuilderTest {
             assertEquals(1, superInterface.getProperties().size());
             checkProperty(superInterface.getProperties().get(0), "name", "getName", "String");
         }
-    }
-
-    private void checkProperty(PropertyDefinition propertyDefinition, String tsName, String getterName, String typeName) {
-        assertEquals(tsName, propertyDefinition.getName());
-        assertEquals(getterName, propertyDefinition.getGetterName());
-        assertEquals(typeName, propertyDefinition.getType().getShortName());
     }
 
 }

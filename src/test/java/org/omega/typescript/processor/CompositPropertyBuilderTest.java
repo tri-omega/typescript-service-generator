@@ -9,6 +9,7 @@ import org.omega.typescript.processor.test.dto.SimpleDto;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.omega.typescript.processor.TestUtils.checkProperty;
 
 /**
  * Created by kibork on 4/3/2018.
@@ -48,10 +49,6 @@ public class CompositPropertyBuilderTest {
         checkProperty(properties.get(1), "simpleDto", "getSimpleDto", SimpleDto.class.getSimpleName());
     }
 
-    private void checkProperty(PropertyDefinition propertyDefinition, String tsName, String getterName, String typeName) {
-        assertEquals(tsName, propertyDefinition.getName());
-        assertEquals(getterName, propertyDefinition.getGetterName());
-        assertEquals(typeName, propertyDefinition.getType().getShortName());
-    }
+
 
 }
