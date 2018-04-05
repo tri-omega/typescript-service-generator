@@ -2,15 +2,19 @@ package org.omega.typescript.processor.builders;
 
 import org.omega.typescript.api.TypeScriptName;
 import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.model.EnumConstant;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 import org.omega.typescript.processor.utils.StringUtils;
+import org.omega.typescript.processor.utils.TypeUtils;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by kibork on 1/23/2018.
@@ -53,6 +57,23 @@ public class TypeDefinitionBuilder {
     private void initializeTypeDefinition(final TypeDefinition typeDefinition, final TypeElement typeElement) {
         typeDefinition.setTypeKind(fromElementKind(typeElement.getKind(), typeElement));
         typeDefinition.setTypeScriptName(getTypeScriptName(typeDefinition, typeElement));
+
+        if (typeDefinition.getTypeKind() == TypeKind.INTERFACE) {
+            initializeInterface(typeDefinition, typeElement);
+        } else if (typeDefinition.getTypeKind() == TypeKind.ENUM) {
+            initializeEnum(typeDefinition, typeElement);
+        }
+    }
+
+    private void initializeEnum(TypeDefinition typeDefinition, TypeElement typeElement) {
+        final List<Element> members = TypeUtils.getMembers(typeElement, ElementKind.ENUM_CONSTANT, context);
+        typeDefinition.getEnumConstants().addAll(members.stream()
+                .map(e -> new EnumConstant(e.getSimpleName().toString()))
+                .collect(Collectors.toList())
+        );
+    }
+
+    private void initializeInterface(TypeDefinition typeDefinition, TypeElement typeElement) {
         typeDefinition.getProperties()
                 .addAll(
                         propertyDefinitionBuilder.buildPropertyGetters(typeElement)

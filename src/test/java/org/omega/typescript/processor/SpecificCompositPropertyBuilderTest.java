@@ -31,7 +31,7 @@ public class SpecificCompositPropertyBuilderTest {
 
         return endpointProcessorSingleton.getEndpointContainer()
                 .getEndpoint("org.omega.typescript.processor.test.SpecificCompositDtoController")
-                .orElseThrow(() -> new IllegalStateException("CompositDtoController endpoint not found"));
+                .orElseThrow(() -> new IllegalStateException("SpecificCompositDtoController endpoint not found"));
     }
 
     @Test

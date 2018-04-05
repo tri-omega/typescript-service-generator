@@ -31,6 +31,8 @@ public class TypeDefinition {
 
     private List<PropertyDefinition> properties = new ArrayList<>();
 
+    private List<EnumConstant> enumConstants = new ArrayList<>();
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
