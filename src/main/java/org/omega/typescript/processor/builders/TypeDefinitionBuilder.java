@@ -8,6 +8,8 @@ import org.omega.typescript.processor.utils.StringUtils;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,6 +57,28 @@ public class TypeDefinitionBuilder {
                 .addAll(
                         propertyDefinitionBuilder.buildPropertyGetters(typeElement)
                 );
+
+        readSuperclass(typeDefinition, typeElement);
+
+        final List<? extends TypeMirror> interfaces = typeElement.getInterfaces();
+        for (final TypeMirror interfaceMirror : interfaces) {
+            final TypeElement interfaceElement = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(interfaceMirror);
+            if (!Object.class.getName().equals(interfaceElement.getQualifiedName().toString())) {
+                final TypeDefinition interfaceDefinition = context.getTypeOracle().getOrDefineType(interfaceElement);
+                typeDefinition.getSuperTypes().add(interfaceDefinition);
+            }
+        }
+    }
+
+    private void readSuperclass(TypeDefinition typeDefinition, TypeElement typeElement) {
+        final TypeMirror superclassMirror = typeElement.getSuperclass();
+        if (superclassMirror != null) {
+            final TypeElement superClass = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(superclassMirror);
+            if ((superClass != null) && (!Object.class.getName().equals(superClass.getQualifiedName().toString()))) {
+                final TypeDefinition superClassDefinition = context.getTypeOracle().getOrDefineType(superClass);
+                typeDefinition.getSuperTypes().add(superClassDefinition);
+            }
+        }
     }
 
     private String getTypeScriptName(TypeDefinition typeDefinition, TypeElement element) {
