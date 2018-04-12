@@ -82,4 +82,12 @@ public class TypeOracle {
         final String className = typeDefinition.getFullName();
         types.putIfAbsent(className, typeDefinition);
     }
+
+    public TypeDefinition getAny() {
+        return context.getTypeOracle().getType(Object.class.getName()).orElse(null);
+    }
+
+    public TypeInstanceDefinition getAnyInstance() {
+        return typeInstanceBuilder.buildAny();
+    }
 }

@@ -2,8 +2,7 @@ package org.omega.typescript.processor.test.dto;
 
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
 
 /**
  * Created by kibork on 4/5/2018.
@@ -15,7 +14,7 @@ public class GenericClass<T extends CompositDto & HasName> {
 
     // ------------------ Fields     --------------------
 
-    private SubGeneric<String, ? extends SimpleDto, T, ? extends SimpleGeneric<? extends DobuleGeneric<String, ?>>, ? super Integer> field1;
+    private SubGeneric<String, ? extends SimpleDto, T, ? extends SimpleGeneric<? extends DoubleGeneric<String, ?>>, ? super Integer> field1;
 
     private T field2;
 
@@ -42,6 +41,10 @@ public class GenericClass<T extends CompositDto & HasName> {
         public R2 getField2() {
             return field2;
         }
+
+        public <T extends SimpleGeneric<String>> T getField6() { return null; }
+
+        public <T extends SimpleGeneric<String> & HasName> T getField7() { return null; }
     }
 
     @Data
@@ -50,7 +53,7 @@ public class GenericClass<T extends CompositDto & HasName> {
     }
 
     @Data
-    public static class DobuleGeneric<T1, T2> {
+    public static class DoubleGeneric<T1, T2> {
         private T1 t1;
         private T2 t2;
     }

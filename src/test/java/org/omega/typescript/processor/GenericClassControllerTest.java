@@ -60,13 +60,37 @@ public class GenericClassControllerTest {
             checkProperty(property, "field1", "SubGeneric");
             final TypeInstanceDefinition propertyType = property.getType();
             assertEquals(5, propertyType.getGenericTypeArguments().size());
+            assertEquals(5, propertyType.getTypeDefinition().getGenericTypeParams().size());
             assertEquals("String", propertyType.getGenericTypeArguments().get(0).getShortName());
             assertEquals("SimpleDto", propertyType.getGenericTypeArguments().get(1).getShortName());
             assertEquals("T", propertyType.getGenericTypeArguments().get(2).getShortName());
             
-            assertEquals("SimpleGeneric", propertyType.getGenericTypeArguments().get(3).getShortName());
-
             assertEquals("Object", propertyType.getGenericTypeArguments().get(4).getShortName());
+
+            {
+                final TypeInstanceDefinition pType = propertyType.getGenericTypeArguments().get(3);
+                assertEquals("SimpleGeneric", pType.getShortName());
+                assertEquals(1, pType.getGenericTypeArguments().size());
+
+                {
+                    final TypeInstanceDefinition innerType = pType.getGenericTypeArguments().get(0);
+                    assertEquals("DoubleGeneric", innerType.getShortName());
+                    assertEquals(2, innerType.getGenericTypeArguments().size());
+                    assertEquals("String", innerType.getGenericTypeArguments().get(0).getShortName());
+                    assertEquals("Object", innerType.getGenericTypeArguments().get(1).getShortName());
+                }
+            }
+
+            {
+                final PropertyDefinition p6 = propertyType.getPropertyByName("field6")
+                        .orElseThrow(IllegalArgumentException::new);
+                assertEquals("SimpleGeneric", p6.getType().getShortName());
+            }
+            {
+                final PropertyDefinition p7 = propertyType.getPropertyByName("field7")
+                        .orElseThrow(IllegalArgumentException::new);
+                assertEquals("Object", p7.getType().getShortName());
+            }
 
         }
 

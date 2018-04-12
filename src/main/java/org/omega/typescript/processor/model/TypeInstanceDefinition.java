@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by kibork on 4/9/2018.
@@ -66,5 +67,11 @@ public class TypeInstanceDefinition {
 
     public TypeInstanceDefinition(final TypeDefinition typeDefinition) {
         this.typeDefinition = typeDefinition;
+    }
+
+    public Optional<PropertyDefinition> getPropertyByName(final String propertyName) {
+        return getProperties().stream()
+                .filter(p -> p.getName().equals(propertyName))
+                .findAny();
     }
 }
