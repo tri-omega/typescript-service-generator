@@ -18,7 +18,7 @@ public class MethodParameter {
 
     private final EndpointMethod method;
 
-    private TypeDefinition type;
+    private TypeInstanceDefinition type;
 
     private Optional<PathVariableDefinition> pathVariableName;
 

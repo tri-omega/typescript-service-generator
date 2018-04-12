@@ -4,6 +4,7 @@ import org.omega.typescript.api.TypeScriptName;
 import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.EnumConstant;
 import org.omega.typescript.processor.model.TypeDefinition;
+import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 import org.omega.typescript.processor.utils.StringUtils;
 import org.omega.typescript.processor.utils.TypeUtils;
@@ -11,6 +12,7 @@ import org.omega.typescript.processor.utils.TypeUtils;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +76,8 @@ public class TypeDefinitionBuilder {
     }
 
     private void initializeInterface(TypeDefinition typeDefinition, TypeElement typeElement) {
+        initializeTypeParams(typeDefinition, typeElement);
+
         typeDefinition.getProperties()
                 .addAll(
                         propertyDefinitionBuilder.buildPropertyGetters(typeElement)
@@ -86,9 +90,29 @@ public class TypeDefinitionBuilder {
             final TypeElement interfaceElement = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(interfaceMirror);
             if (!Object.class.getName().equals(interfaceElement.getQualifiedName().toString())) {
                 final TypeDefinition interfaceDefinition = context.getTypeOracle().getOrDefineType(interfaceElement);
-                typeDefinition.getSuperTypes().add(interfaceDefinition);
+                final TypeInstanceDefinition typeInstanceDefinition = new TypeInstanceDefinition(interfaceDefinition);
+                typeDefinition.getSuperTypes().add(typeInstanceDefinition);
             }
         }
+    }
+
+    private void initializeTypeParams(TypeDefinition typeDefinition, TypeElement typeElement) {
+        if (!typeElement.getTypeParameters().isEmpty()) {
+            typeElement.getTypeParameters().forEach(t ->
+                    typeDefinition.getGenericTypeParams().add(buildGenericType(t, typeDefinition))
+            );
+        }
+    }
+
+    private TypeDefinition buildGenericType(final TypeParameterElement typeElement, final TypeDefinition typeDefinition) {
+        final String genericName = typeElement.getSimpleName().toString();
+        final TypeDefinition newGenericType = new TypeDefinition(TypeUtils.getGenericTypeName(typeDefinition, genericName), genericName);
+        newGenericType.setTypeKind(TypeKind.GENERIC_PLACEHOLDER);
+        typeElement.getBounds().forEach(t -> {
+            //Adding each of the bounds as an super interface to the type
+            newGenericType.getSuperTypes().add(context.getTypeOracle().buildInstance(t));
+        });
+        return newGenericType;
     }
 
     private void readSuperclass(TypeDefinition typeDefinition, TypeElement typeElement) {
@@ -96,7 +120,7 @@ public class TypeDefinitionBuilder {
         if (superclassMirror != null) {
             final TypeElement superClass = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(superclassMirror);
             if ((superClass != null) && (!Object.class.getName().equals(superClass.getQualifiedName().toString()))) {
-                final TypeDefinition superClassDefinition = context.getTypeOracle().getOrDefineType(superClass);
+                final TypeInstanceDefinition superClassDefinition = context.getTypeOracle().buildInstance(superClass);
                 typeDefinition.getSuperTypes().add(superClassDefinition);
             }
         }

@@ -3,7 +3,7 @@ package org.omega.typescript.processor;
 import org.junit.jupiter.api.Test;
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.EndpointMethod;
-import org.omega.typescript.processor.model.TypeDefinition;
+import org.omega.typescript.processor.model.TypeInstanceDefinition;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.omega.typescript.processor.TestUtils.checkProperty;
@@ -38,7 +38,7 @@ public class WithSubClassControllerTest {
         final EndpointMethod get = endpoint.getMethod("get")
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
-        final TypeDefinition type = get.getReturnType();
+        final TypeInstanceDefinition type = get.getReturnType();
 
         assertEquals(2, type.getProperties().size());
         checkProperty(type.getProperties().get(0), "field1", "String");

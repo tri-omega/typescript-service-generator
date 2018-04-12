@@ -1,5 +1,7 @@
 package org.omega.typescript.processor;
 
+import org.omega.typescript.processor.builders.TypeInstanceBuilder;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 

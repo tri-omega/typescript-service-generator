@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.utils;
 
 import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.model.TypeDefinition;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
@@ -61,5 +62,10 @@ public final class TypeUtils {
         }
         return element.getSimpleName().toString();
     }
+
+    public static String getGenericTypeName(final TypeDefinition containerType, final String genericName) {
+        return containerType.getFullName() + "#" + genericName;
+    }
+
 }
 

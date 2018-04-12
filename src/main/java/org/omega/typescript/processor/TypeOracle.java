@@ -1,7 +1,9 @@
 package org.omega.typescript.processor;
 
 import org.omega.typescript.processor.builders.TypeDefinitionBuilder;
+import org.omega.typescript.processor.builders.TypeInstanceBuilder;
 import org.omega.typescript.processor.model.TypeDefinition;
+import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.utils.TypeUtils;
 
 import javax.lang.model.element.TypeElement;
@@ -23,6 +25,8 @@ public class TypeOracle {
 
     private TypeDefinitionBuilder typeDefinitionBuilder;
 
+    private TypeInstanceBuilder typeInstanceBuilder;
+
     private ProcessingContext context;
 
     // ------------------ Properties --------------------
@@ -37,6 +41,7 @@ public class TypeOracle {
     public void initContext(final ProcessingContext context) {
         this.context = context;
         this.typeDefinitionBuilder = new TypeDefinitionBuilder(context);
+        this.typeInstanceBuilder = new TypeInstanceBuilder(context);
     }
 
     public Optional<TypeDefinition> getType(final String qualifiedName) {
@@ -46,6 +51,14 @@ public class TypeOracle {
     public Optional<TypeDefinition> getType(final TypeElement typeElement) {
         final String className = TypeUtils.getClassName(typeElement);
         return getType(className);
+    }
+
+    public TypeInstanceDefinition buildInstance(final TypeElement typeElement) {
+        return typeInstanceBuilder.buildDefinition(typeElement);
+    }
+
+    public TypeInstanceDefinition buildInstance(final TypeMirror typeMirror) {
+        return typeInstanceBuilder.buildDefinition(typeMirror);
     }
 
     public TypeDefinition getOrDefineType(final TypeElement typeElement) {

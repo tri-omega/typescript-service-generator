@@ -1,10 +1,7 @@
 package org.omega.typescript.processor;
 
 import org.junit.jupiter.api.Test;
-import org.omega.typescript.processor.model.Endpoint;
-import org.omega.typescript.processor.model.EndpointMethod;
-import org.omega.typescript.processor.model.PropertyDefinition;
-import org.omega.typescript.processor.model.TypeDefinition;
+import org.omega.typescript.processor.model.*;
 
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class SpecificCompositPropertyBuilderTest {
         final EndpointMethod getSimpleDto = endpoint.getMethod("get")
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
-        final TypeDefinition type = getSimpleDto.getReturnType();
+        final TypeInstanceDefinition type = getSimpleDto.getReturnType();
         final List<PropertyDefinition> properties = type.getProperties();
         
         assertEquals(1, properties.size());
@@ -51,13 +48,13 @@ public class SpecificCompositPropertyBuilderTest {
         assertEquals(2, type.getSuperTypes().size());
 
         {
-            final TypeDefinition superType = type.getSuperTypes().get(0);
+            final TypeInstanceDefinition superType = type.getSuperTypes().get(0);
             assertEquals("org.omega.typescript.processor.test.dto.CompositDto", superType.getFullName());
             assertEquals(0, superType.getSuperTypes().size());
         }
 
         {
-            final TypeDefinition superInterface = type.getSuperTypes().get(1);
+            final TypeInstanceDefinition superInterface = type.getSuperTypes().get(1);
             assertEquals("org.omega.typescript.processor.test.dto.HasName", superInterface.getFullName());
             assertEquals(0, superInterface.getSuperTypes().size());
 

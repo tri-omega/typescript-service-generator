@@ -35,7 +35,7 @@ public class SimpleEnumBuilderTest {
         final EndpointMethod get = endpoint.getMethod("get")
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
-        final TypeDefinition type = get.getReturnType();
+        final TypeInstanceDefinition type = get.getReturnType();
         assertEquals(TypeKind.ENUM, type.getTypeKind());
 
         assertEquals(2, type.getEnumConstants().size());

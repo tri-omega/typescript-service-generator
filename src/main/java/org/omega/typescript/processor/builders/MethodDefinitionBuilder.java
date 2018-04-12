@@ -55,7 +55,7 @@ public class MethodDefinitionBuilder {
                 .collect(Collectors.toList())
         );
 
-        method.setReturnType(context.getTypeOracle().getOrDefineType(methodElement.getReturnType()));
+        method.setReturnType(context.getTypeOracle().buildInstance(methodElement.getReturnType()));
 
         return Optional.of(method);
     }

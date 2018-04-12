@@ -48,7 +48,7 @@ public class MethodParameterBuilder {
         param.setPathVariableName(readVariableDef(pathVariableOption, paramName));
         param.setRequestBody(readVariableDef(requestBodyParam, paramName));
 
-        param.setType(context.getTypeOracle().getOrDefineType(variableElement.asType()));
+        param.setType(context.getTypeOracle().buildInstance(variableElement.asType()));
 
         return Optional.of(param);
     }

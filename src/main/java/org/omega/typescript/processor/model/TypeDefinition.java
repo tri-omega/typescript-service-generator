@@ -23,7 +23,7 @@ public class TypeDefinition {
 
     private TypeKind typeKind;
 
-    private List<TypeDefinition> superTypes = new ArrayList<>();
+    private List<TypeInstanceDefinition> superTypes = new ArrayList<>();
 
     private boolean initialized = false;
 
@@ -32,6 +32,8 @@ public class TypeDefinition {
     private List<PropertyDefinition> properties = new ArrayList<>();
 
     private List<EnumConstant> enumConstants = new ArrayList<>();
+
+    private List<TypeDefinition> genericTypeParams = new ArrayList<>();
 
     // ------------------ Properties --------------------
 
@@ -50,4 +52,5 @@ public class TypeDefinition {
         }
         return this;
     }
+
 }

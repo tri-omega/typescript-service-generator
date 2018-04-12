@@ -12,6 +12,6 @@ public class PropertyDefinition {
 
     private String getterName;
 
-    private TypeDefinition type;
+    private TypeInstanceDefinition type;
 
 }

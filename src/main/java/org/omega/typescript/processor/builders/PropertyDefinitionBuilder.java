@@ -12,6 +12,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -106,7 +107,8 @@ public class PropertyDefinitionBuilder {
         final PropertyDefinition property = new PropertyDefinition();
         property.setGetterName(getter.getSimpleName().toString());
         property.setName(getTypeScriptName(getter));
-        property.setType(context.getTypeOracle().getOrDefineType(getter.getReturnType()));
+        final TypeMirror returnType = getter.getReturnType();
+        property.setType(context.getTypeOracle().buildInstance(returnType));
         return property;
     }
 

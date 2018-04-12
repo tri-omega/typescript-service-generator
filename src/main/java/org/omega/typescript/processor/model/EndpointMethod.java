@@ -23,7 +23,7 @@ public class EndpointMethod {
 
     private final MappingDefinition mappingDefinition;
 
-    private TypeDefinition returnType;
+    private TypeInstanceDefinition returnType;
 
     private List<MethodParameter> params = new ArrayList<>();
 

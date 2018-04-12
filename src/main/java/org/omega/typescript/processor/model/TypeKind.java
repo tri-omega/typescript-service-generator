@@ -9,6 +9,8 @@ public enum TypeKind {
 
     PRIMITIVE,
     INTERFACE,
-    ENUM;
+    ENUM,
+
+    GENERIC_PLACEHOLDER
 
 }
