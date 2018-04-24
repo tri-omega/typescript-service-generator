@@ -2,6 +2,7 @@ package org.omega.typescript.processor;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
+import org.omega.typescript.processor.utils.TypeUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,8 +37,18 @@ public class PredefinedTypes {
         addPrimitive(typeOracle, "double", "double", "number");
         addPrimitive(typeOracle, "float", "double", "number");
 
+        addPrimitive(typeOracle, "boolean", "boolean", "boolean");
+        addPrimitive(typeOracle, Boolean.class, "boolean");
+
         addPrimitive(typeOracle, BigDecimal.class,"number");
         addPrimitive(typeOracle, BigInteger.class,"number");
+
+        typeOracle.addType(
+                new TypeDefinition(TypeUtils.ARRAY_TYPE_NAME, TypeUtils.ARRAY_TYPE_NAME)
+                    .setTypeKind(TypeKind.COLLECTION)
+                    .setPredefined(true)
+                    .setTypeScriptName(TypeUtils.ARRAY_TYPE_NAME)
+        );
     }
 
     private static void addPrimitive(final TypeOracle typeOracle, final Class<?> clazz, String tsTypeName) {

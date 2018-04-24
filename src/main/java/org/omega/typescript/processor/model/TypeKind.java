@@ -11,6 +11,9 @@ public enum TypeKind {
     INTERFACE,
     ENUM,
 
-    GENERIC_PLACEHOLDER
+    GENERIC_PLACEHOLDER,
+
+    COLLECTION,
+    MAP
 
 }

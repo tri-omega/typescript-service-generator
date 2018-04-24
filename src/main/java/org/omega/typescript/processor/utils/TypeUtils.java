@@ -4,6 +4,7 @@ import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.TypeDefinition;
 
 import javax.lang.model.element.*;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 public final class TypeUtils {
 
     // ------------------ Constants  --------------------
+
+    public static final String ARRAY_TYPE_NAME = "[]";
 
     // ------------------ Fields     --------------------
 
@@ -53,7 +56,9 @@ public final class TypeUtils {
     public static String getClassName(final TypeMirror typeMirror, final ProcessingContext context) {
         if (typeMirror.getKind().isPrimitive()) {
             return typeMirror.toString();
-        } 
+        } else if (typeMirror.getKind() == TypeKind.ARRAY) {
+            return ARRAY_TYPE_NAME;
+        }
         final Types typeUtils = context.getProcessingEnv().getTypeUtils();
         final Element element = typeUtils.asElement(typeMirror);
         if (element instanceof QualifiedNameable) {

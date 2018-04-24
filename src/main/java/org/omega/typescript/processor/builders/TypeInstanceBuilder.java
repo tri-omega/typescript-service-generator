@@ -8,10 +8,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
+import javax.lang.model.type.*;
 import java.util.List;
 
 /**
@@ -42,6 +39,8 @@ public class TypeInstanceBuilder {
             return createFromGenericTypeParameter(typeMirror);
         } else if (typeMirror.getKind() == TypeKind.WILDCARD) {
             return createWildcardInstance((WildcardType) typeMirror);
+        } else if (typeMirror.getKind() == TypeKind.ARRAY) {
+            return createArray((ArrayType)typeMirror);
         } else {
             //If this is a simple case
             final TypeInstanceDefinition typeInstance = new TypeInstanceDefinition(context.getTypeOracle().getOrDefineType(typeMirror));
@@ -51,6 +50,12 @@ public class TypeInstanceBuilder {
             }
             return typeInstance;
         }
+    }
+
+    private TypeInstanceDefinition createArray(final ArrayType type) {
+        final TypeInstanceDefinition typeInstance = new TypeInstanceDefinition(context.getTypeOracle().getOrDefineType(type));
+        typeInstance.getGenericTypeArguments().add(buildDefinition(type.getComponentType()));
+        return typeInstance;
     }
 
     private TypeInstanceDefinition createFromGenericTypeParameter(TypeMirror typeMirror) {
