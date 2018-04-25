@@ -116,9 +116,9 @@ public class TypeOracle {
 
     private TypeDefinition buildNewType(final TypeElement typeElement) {
         final Types types = context.getProcessingEnv().getTypeUtils();
-
         final TypeMirror erasedType = types.erasure(typeElement.asType());
 
+        //Place to be extended to support user level type overrides
         if (types.isAssignable(erasedType, collectionType)) {
             final Optional<TypeDefinition> arrayType = getType(TypeUtils.ARRAY_TYPE_NAME);
             if (arrayType.isPresent()) {
