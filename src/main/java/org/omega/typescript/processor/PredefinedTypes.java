@@ -6,6 +6,7 @@ import org.omega.typescript.processor.utils.TypeUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Map;
 
 /**
  * Created by kibork on 3/12/2018.
@@ -42,6 +43,13 @@ public class PredefinedTypes {
 
         addPrimitive(typeOracle, BigDecimal.class,"number");
         addPrimitive(typeOracle, BigInteger.class,"number");
+
+        typeOracle.addType(
+                new TypeDefinition(Map.class.getName(), Map.class.getSimpleName())
+                    .setTypeKind(TypeKind.MAP)
+                    .setPredefined(true)
+                    .setTypeScriptName("Map")
+        );
 
         typeOracle.addType(
                 new TypeDefinition(TypeUtils.ARRAY_TYPE_NAME, TypeUtils.ARRAY_TYPE_NAME)

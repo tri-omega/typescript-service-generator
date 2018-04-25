@@ -37,11 +37,27 @@ public class CollectionBuilderTest {
 
         final TypeInstanceDefinition collectionDto = get.getReturnType();
 
-        final PropertyDefinition arrayProperty = collectionDto.getPropertyByName("stringArray")
-                .orElseThrow(() -> new RuntimeException("Not found"));
-        assertEquals(TypeKind.COLLECTION, arrayProperty.getType().getTypeKind());
-        assertEquals("String", arrayProperty.getType().getGenericTypeArguments().get(0).getShortName());
+        checkCollectionProperty(collectionDto, "stringArray", "String");
 
+        checkCollectionProperty(collectionDto, "stringList", "String");
+        checkCollectionProperty(collectionDto, "stringSet", "String");
+        checkCollectionProperty(collectionDto, "longCollection", "Long");
+
+        {
+            final PropertyDefinition arrayProperty = collectionDto.getPropertyByName("untypedList")
+                    .orElseThrow(() -> new IllegalArgumentException("Property untypedList not found"));
+            assertEquals(TypeKind.COLLECTION, arrayProperty.getType().getTypeKind(), "Failed property untypedList");
+            assertEquals(0, arrayProperty.getType().getGenericTypeArguments().size(), "Failed property untypedList");
+
+        }
+    }
+
+    private void checkCollectionProperty(final TypeInstanceDefinition collectionDto, final String propName, String elementType) {
+        final PropertyDefinition arrayProperty = collectionDto.getPropertyByName(propName)
+                .orElseThrow(() -> new IllegalArgumentException("Property " + propName + " not found"));
+        assertEquals(TypeKind.COLLECTION, arrayProperty.getType().getTypeKind(), "Failed property " + propName);
+        assertEquals(1, arrayProperty.getType().getGenericTypeArguments().size(), "Failed property " + propName);
+        assertEquals(elementType, arrayProperty.getType().getGenericTypeArguments().get(0).getShortName(), "Failed property " + propName);
     }
 
 }

@@ -5,15 +5,24 @@ package org.omega.typescript.processor.model;
  */
 public enum TypeKind {
 
-    UNKNOWN,
+    UNKNOWN(false),
 
-    PRIMITIVE,
-    INTERFACE,
-    ENUM,
+    PRIMITIVE(false),
+    INTERFACE(true),
+    ENUM(false),
 
-    GENERIC_PLACEHOLDER,
+    GENERIC_PLACEHOLDER(false),
 
-    COLLECTION,
-    MAP
+    COLLECTION(true),
+    MAP(true);
 
+    private final boolean hasTypeParams;
+
+    public boolean hasTypeParams() {
+        return hasTypeParams;
+    }
+
+    TypeKind(boolean hasTypeParams) {
+        this.hasTypeParams = hasTypeParams;
+    }
 }

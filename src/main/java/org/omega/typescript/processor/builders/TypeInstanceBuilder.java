@@ -44,8 +44,7 @@ public class TypeInstanceBuilder {
         } else {
             //If this is a simple case
             final TypeInstanceDefinition typeInstance = new TypeInstanceDefinition(context.getTypeOracle().getOrDefineType(typeMirror));
-            if (typeInstance.getTypeKind() == org.omega.typescript.processor.model.TypeKind.INTERFACE) {
-                //final TypeElement typeElement = (TypeElement)context.getProcessingEnv().getTypeUtils().asElement(typeMirror);
+            if ((typeInstance.getTypeKind().hasTypeParams())) {
                 checkTypeParameters(typeInstance, typeMirror);
             }
             return typeInstance;
@@ -63,6 +62,7 @@ public class TypeInstanceBuilder {
         final String typeParamName = element.getSimpleName().toString();
         final Element parentElement = element.getGenericElement();
         if (parentElement instanceof TypeElement) {
+            //Get the class that contains the generic type definition from the Oracle
             final TypeDefinition parentType = context.getTypeOracle().getOrDefineType((TypeElement) parentElement);
             final TypeDefinition typeDefinition = parentType.getGenericTypeParams().stream()
                     .filter(f -> f.getShortName().equals(typeParamName))

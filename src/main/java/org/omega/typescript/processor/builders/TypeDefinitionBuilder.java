@@ -9,10 +9,7 @@ import org.omega.typescript.processor.model.TypeKind;
 import org.omega.typescript.processor.utils.StringUtils;
 import org.omega.typescript.processor.utils.TypeUtils;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Optional;
@@ -87,11 +84,9 @@ public class TypeDefinitionBuilder {
 
         final List<? extends TypeMirror> interfaces = typeElement.getInterfaces();
         for (final TypeMirror interfaceMirror : interfaces) {
-            final TypeElement interfaceElement = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(interfaceMirror);
-            if (!Object.class.getName().equals(interfaceElement.getQualifiedName().toString())) {
-                final TypeDefinition interfaceDefinition = context.getTypeOracle().getOrDefineType(interfaceElement);
-                final TypeInstanceDefinition typeInstanceDefinition = new TypeInstanceDefinition(interfaceDefinition);
-                typeDefinition.getSuperTypes().add(typeInstanceDefinition);
+            final QualifiedNameable interfaceElement = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(interfaceMirror);
+            if ((interfaceElement == null) || (!Object.class.getName().equals(interfaceElement.getQualifiedName().toString()))) {
+                typeDefinition.getSuperTypes().add(context.getTypeOracle().buildInstance(interfaceMirror));
             }
         }
     }
@@ -118,9 +113,9 @@ public class TypeDefinitionBuilder {
     private void readSuperclass(TypeDefinition typeDefinition, TypeElement typeElement) {
         final TypeMirror superclassMirror = typeElement.getSuperclass();
         if (superclassMirror != null) {
-            final TypeElement superClass = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(superclassMirror);
+            final QualifiedNameable superClass = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(superclassMirror);
             if ((superClass != null) && (!Object.class.getName().equals(superClass.getQualifiedName().toString()))) {
-                final TypeInstanceDefinition superClassDefinition = context.getTypeOracle().buildInstance(superClass);
+                final TypeInstanceDefinition superClassDefinition = context.getTypeOracle().buildInstance(superclassMirror);
                 typeDefinition.getSuperTypes().add(superClassDefinition);
             }
         }

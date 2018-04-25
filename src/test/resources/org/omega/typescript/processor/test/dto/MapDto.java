@@ -2,29 +2,23 @@ package org.omega.typescript.processor.test.dto;
 
 import lombok.Data;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by kibork on 4/24/2018.
  */
 @Data
-public class CollectionDto {
+public class MapDto {
 
     // ------------------ Constants  --------------------
 
     // ------------------ Fields     --------------------
 
-    private String[] stringArray;
+    private Map untypedMap;
 
-    private List<String> stringList;
+    private Map<String, ?> stringMap;
 
-    private Set<String> stringSet;
-
-    private Collection<Long> longCollection;
-
-    private List untypedList;
+    private HashMap<String, Object> stringHashMap;
 
     // ------------------ Properties --------------------
 
