@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.rendering;
 
 import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.model.TypeContainer;
 import org.omega.typescript.processor.model.TypeDefinition;
 
 import java.io.BufferedWriter;
@@ -54,8 +55,14 @@ public class FileStorageStrategy implements StorageStrategy {
         return getName(definition) + ".ts";
     }
 
-    private String getName(TypeDefinition definition) {
-        return definition.getShortName() + ".generated";
+    private String getName(final TypeDefinition definition) {
+        final StringBuilder prefix = new StringBuilder();
+        TypeContainer container = definition.getContainer();
+        while ((container != null) && (!container.isPackageElement())) {
+            prefix.insert(0, container.getShortName() + "$");
+            container = container.getContainer();
+        }
+        return prefix + definition.getShortName() + ".generated";
     }
 
     @Override

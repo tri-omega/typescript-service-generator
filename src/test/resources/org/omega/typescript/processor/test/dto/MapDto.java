@@ -22,6 +22,8 @@ public class MapDto {
 
     private TreeMap<Long, SimpleDto> dtoMap;
 
+    private Map<SimpleDto, String> invalidMap;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------

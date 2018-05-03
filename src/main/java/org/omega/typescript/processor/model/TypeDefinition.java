@@ -35,6 +35,8 @@ public class TypeDefinition {
 
     private List<TypeDefinition> genericTypeParams = new ArrayList<>();
 
+    private TypeContainer container = null;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------

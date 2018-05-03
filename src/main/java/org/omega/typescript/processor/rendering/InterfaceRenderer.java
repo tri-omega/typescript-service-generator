@@ -45,7 +45,7 @@ public class InterfaceRenderer {
         writer.append("export interface ")
                 .append(definition.getTypeScriptName())
                 .append(getGenericDecl(definition))
-                .append(getExtendsDecl(definition.getSuperTypes()))
+                .append(getExtendsDecl(definition.getSuperTypes(), ", "))
                 .append(" {");
         writer.newLine();
         final TypeInstanceRenderer instanceRenderer = context.getInstanceRenderer();
@@ -66,19 +66,23 @@ public class InterfaceRenderer {
             return "";
         }
         final String generics = definition.getGenericTypeParams().stream()
-                .map(t -> t.getTypeScriptName() + getExtendsDecl(t.getSuperTypes()))
-                .collect(Collectors.joining("& "));
+                .map(t -> t.getTypeScriptName() + getExtendsDecl(t.getSuperTypes(), " & "))
+                .collect(Collectors.joining(", "));
         return "<" + generics + ">";
     }
 
-    private String getExtendsDecl(final List<TypeInstanceDefinition> superTypes) {
+    private String getExtendsDecl(final List<TypeInstanceDefinition> superTypes_, String delimiter) {
+        final TypeDefinition anyTypeDef = context.getProcessingContext().getTypeOracle().getAny();
+        final List<TypeInstanceDefinition> superTypes = superTypes_.stream()
+                .filter(t -> t.getTypeDefinition() != anyTypeDef)
+                .collect(Collectors.toList());
         if (superTypes.isEmpty()) {
             return "";
         }
         final TypeInstanceRenderer instanceRenderer = context.getInstanceRenderer();
         return " extends " + superTypes.stream()
                 .map(instanceRenderer::renderTypeInstance)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(delimiter));
     }
 
     private void renderImports(final TypeDefinition definition, final BufferedWriter writer) throws Exception {

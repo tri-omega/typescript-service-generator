@@ -28,6 +28,8 @@ public class TypeDefinitionBuilder {
 
     private final PropertyDefinitionBuilder propertyDefinitionBuilder;
 
+    private final TypeContainerBuilder typeContainerBuilder;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -36,6 +38,7 @@ public class TypeDefinitionBuilder {
     public TypeDefinitionBuilder(final ProcessingContext context) {
         this.context = context;
         this.propertyDefinitionBuilder = new PropertyDefinitionBuilder(context);
+        this.typeContainerBuilder = new TypeContainerBuilder(context);
     }
 
     public TypeDefinition buildClassDefinition(final TypeElement type) {
@@ -62,6 +65,7 @@ public class TypeDefinitionBuilder {
         } else if (typeDefinition.getTypeKind() == TypeKind.ENUM) {
             initializeEnum(typeDefinition, typeElement);
         }
+        typeDefinition.setContainer(typeContainerBuilder.buildContainer(typeElement));
     }
 
     private void initializeEnum(TypeDefinition typeDefinition, TypeElement typeElement) {

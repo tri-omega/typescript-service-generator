@@ -48,6 +48,12 @@ public class WithSubClassControllerTest {
 
         assertEquals("org.omega.typescript.processor.test.dto.WithSubclassDto.SubDto.SubEnum", type.getProperties().get(1).getType()
                 .getProperties().get(0).getType().getFullName());
+
+        assertEquals("SubDto", type.getProperties().get(1).getType()
+                .getProperties().get(0).getType().getTypeDefinition().getContainer().getShortName());
+
+        assertEquals("WithSubclassDto", type.getProperties().get(1).getType()
+                .getProperties().get(0).getType().getTypeDefinition().getContainer().getContainer().getShortName());
     }
 
 }
