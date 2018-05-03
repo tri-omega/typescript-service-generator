@@ -2,13 +2,11 @@ package org.omega.typescript.processor.test.dto;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * Created by kibork on 4/5/2018.
  */
 @Data
-public class GenericClass<T extends CompositDto & HasName> {
+public class GenericClass<T extends CompositeDto & HasName> {
 
     // ------------------ Constants  --------------------
 

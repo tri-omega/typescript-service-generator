@@ -102,6 +102,7 @@ public class TypeDefinitionBuilder {
     private TypeDefinition buildGenericType(final TypeParameterElement typeElement, final TypeDefinition typeDefinition) {
         final String genericName = typeElement.getSimpleName().toString();
         final TypeDefinition newGenericType = new TypeDefinition(TypeUtils.getGenericTypeName(typeDefinition, genericName), genericName);
+        newGenericType.setTypeScriptName(genericName);
         newGenericType.setTypeKind(TypeKind.GENERIC_PLACEHOLDER);
         typeElement.getBounds().forEach(t -> {
             //Adding each of the bounds as an super interface to the type

@@ -1,6 +1,8 @@
 package org.omega.typescript.processor;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
+import org.omega.typescript.processor.rendering.Renderer;
+import org.omega.typescript.processor.rendering.TypeScriptRenderer;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -9,6 +11,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,6 +29,8 @@ public final class EndpointProcessorSingleton {
     private EndpointContainer endpointContainer = new EndpointContainer();
 
     private TypeOracle oracle = new TypeOracle();
+
+    private Renderer renderer;
 
     // ------------------ Properties --------------------
 
@@ -45,6 +50,7 @@ public final class EndpointProcessorSingleton {
 
 
     private EndpointProcessorSingleton() {
+        renderer = new TypeScriptRenderer();
     }
 
     public void clear() {
@@ -54,15 +60,29 @@ public final class EndpointProcessorSingleton {
 
     public void process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv, final ProcessingEnvironment processingEnv) {
         final List<TypeElement> endpoints = collectRoundEndpoints(roundEnv);
+        if (endpoints.isEmpty()) {
+            return;
+        }
 
+        final ProcessingContext context = new ProcessingContext(roundEnv, processingEnv, oracle, endpointContainer);
+
+        final AtomicBoolean hasNew = new AtomicBoolean(false);
         endpoints.forEach(type -> {
             final String className = type.getQualifiedName().toString().intern();
             synchronized (className) {
                 if (!endpointContainer.hasEndpoint(className)) {
-                    tryAcceptClass(type, roundEnv, processingEnv);
+                    tryAcceptClass(type, context);
+                    hasNew.set(true);
                 }
             }
         });
+
+        if (hasNew.get()) {
+            renderer.initContext(context);
+            renderer.renderTypes(oracle);
+            renderer.renderEndpoints(endpointContainer);
+        }
+
     }
 
     private List<TypeElement> collectRoundEndpoints(RoundEnvironment roundEnv) {
@@ -73,13 +93,12 @@ public final class EndpointProcessorSingleton {
                 .collect(toList());
     }
 
-    private void tryAcceptClass(final TypeElement type, final RoundEnvironment roundEnv, final ProcessingEnvironment processingEnv) {
+    private void tryAcceptClass(final TypeElement type, ProcessingContext context) {
         final String className = type.getQualifiedName().toString().intern();
         if (endpointContainer.hasEndpoint(className)) {
             //Concurrent processing, skip the element
             return;
         }
-        final ProcessingContext context = new ProcessingContext(roundEnv, processingEnv, oracle, endpointContainer);
         oracle.initContext(context);
         endpointContainer.buildEndpoint(type, context);
     }

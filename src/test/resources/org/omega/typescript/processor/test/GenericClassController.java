@@ -2,8 +2,7 @@ package org.omega.typescript.processor.test;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
 import org.omega.typescript.processor.test.dto.GenericClass;
-import org.omega.typescript.processor.test.dto.SpecificCompositDto;
-import org.omega.typescript.processor.test.dto.WithSubclassDto;
+import org.omega.typescript.processor.test.dto.SpecificCompositeDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +25,7 @@ public class GenericClassController {
     // ------------------ Logic      --------------------
 
     @GetMapping("get")
-    public GenericClass<SpecificCompositDto> get() {
+    public GenericClass<SpecificCompositeDto> get() {
         return null;
     }
 

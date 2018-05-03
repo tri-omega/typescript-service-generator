@@ -27,12 +27,12 @@ public class CompositPropertyBuilderTest {
 
     private Endpoint getEndpoint() {
         final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass(
-                "/org/omega/typescript/processor/test/CompositDtoController.java"
+                "/org/omega/typescript/processor/test/CompositeDtoController.java"
         );
 
         return endpointProcessorSingleton.getEndpointContainer()
-                .getEndpoint("org.omega.typescript.processor.test.CompositDtoController")
-                .orElseThrow(() -> new IllegalStateException("CompositDtoController endpoint not found"));
+                .getEndpoint("org.omega.typescript.processor.test.CompositeDtoController")
+                .orElseThrow(() -> new IllegalStateException("CompositeDtoController endpoint not found"));
     }
 
     @Test

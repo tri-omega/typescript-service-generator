@@ -24,12 +24,12 @@ public class SpecificCompositPropertyBuilderTest {
 
     private Endpoint getEndpoint() {
         final EndpointProcessorSingleton endpointProcessorSingleton = TestUtils.compileClass(
-                "/org/omega/typescript/processor/test/SpecificCompositDtoController.java"
+                "/org/omega/typescript/processor/test/SpecificCompositeDtoController.java"
         );
 
         return endpointProcessorSingleton.getEndpointContainer()
-                .getEndpoint("org.omega.typescript.processor.test.SpecificCompositDtoController")
-                .orElseThrow(() -> new IllegalStateException("SpecificCompositDtoController endpoint not found"));
+                .getEndpoint("org.omega.typescript.processor.test.SpecificCompositeDtoController")
+                .orElseThrow(() -> new IllegalStateException("SpecificCompositeDtoController endpoint not found"));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class SpecificCompositPropertyBuilderTest {
 
         {
             final TypeInstanceDefinition superType = type.getSuperTypes().get(0);
-            assertEquals("org.omega.typescript.processor.test.dto.CompositDto", superType.getFullName());
+            assertEquals("org.omega.typescript.processor.test.dto.CompositeDto", superType.getFullName());
             assertEquals(0, superType.getSuperTypes().size());
         }
 

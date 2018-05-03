@@ -49,7 +49,7 @@ public class GenericClassControllerTest {
             assertEquals("org.omega.typescript.processor.test.dto.GenericClass#T", typeParam.getFullName());
             assertEquals(TypeKind.GENERIC_PLACEHOLDER, typeParam.getTypeKind());
             assertEquals(2, typeParam.getSuperTypes().size());
-            assertEquals("CompositDto", typeParam.getSuperTypes().get(0).getShortName());
+            assertEquals("CompositeDto", typeParam.getSuperTypes().get(0).getShortName());
             assertEquals("HasName", typeParam.getSuperTypes().get(1).getShortName());
         }
 

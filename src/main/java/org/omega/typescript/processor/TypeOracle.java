@@ -38,6 +38,10 @@ public class TypeOracle {
 
     // ------------------ Properties --------------------
 
+    public Collection<TypeDefinition> getKnownTypes() {
+        return types.values();
+    }
+
     // ------------------ Logic      --------------------
 
 

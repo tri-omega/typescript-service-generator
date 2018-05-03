@@ -1,8 +1,7 @@
 package org.omega.typescript.processor.test;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
-import org.omega.typescript.processor.test.dto.CompositDto;
-import org.omega.typescript.processor.test.dto.SimpleDto;
+import org.omega.typescript.processor.test.dto.SpecificCompositeDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @TypeScriptEndpoint
 @RequestMapping(method = RequestMethod.GET, path = "/api/")
-public class CompositDtoController {
+public class SpecificCompositeDtoController {
 
     // ------------------ Constants  --------------------
 
@@ -25,8 +24,9 @@ public class CompositDtoController {
     // ------------------ Logic      --------------------
 
     @GetMapping("get")
-    public CompositDto get() {
+    public SpecificCompositeDto get() {
         return null;
     }
+
 
 }

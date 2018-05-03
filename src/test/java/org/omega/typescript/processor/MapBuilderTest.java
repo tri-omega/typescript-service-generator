@@ -36,16 +36,17 @@ public class MapBuilderTest {
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
         final TypeInstanceDefinition mapDto = get.getReturnType();
+        assertEquals(4, mapDto.getProperties().size());
 
         checkMapProperty(mapDto, "stringMap", "String", "Object");
         checkMapProperty(mapDto, "stringHashMap", "String", "Object");
+        checkMapProperty(mapDto, "dtoMap", "Long", "SimpleDto");
 
         {
             final PropertyDefinition arrayProperty = mapDto.getPropertyByName("untypedMap")
                     .orElseThrow(() -> new IllegalArgumentException("Property untypedMap not found"));
             assertEquals(TypeKind.MAP, arrayProperty.getType().getTypeKind(), "Failed property untypedMap");
             assertEquals(0, arrayProperty.getType().getGenericTypeArguments().size(), "Failed property untypedMap");
-
         }
     }
 

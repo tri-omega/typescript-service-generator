@@ -20,6 +20,8 @@ public class MapDto {
 
     private HashMap<String, Object> stringHashMap;
 
+    private TreeMap<Long, SimpleDto> dtoMap;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
