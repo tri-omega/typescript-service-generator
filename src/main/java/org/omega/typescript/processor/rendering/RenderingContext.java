@@ -18,11 +18,7 @@ public class RenderingContext {
 
     private final StorageStrategy storageStrategy;
 
-    private final InterfaceRenderer interfaceRenderer;
-
     private final TypeInstanceRenderer instanceRenderer;
-
-    private final EnumRenderer enumRenderer;
 
     // ------------------ Properties --------------------
 
@@ -33,9 +29,7 @@ public class RenderingContext {
     public RenderingContext(final ProcessingContext processingContext, final StorageStrategy storageStrategy) {
         this.processingContext = processingContext;
         this.storageStrategy = storageStrategy;
-        this.interfaceRenderer = new InterfaceRenderer(this);
         this.instanceRenderer = new TypeInstanceRenderer(this);
-        this.enumRenderer = new EnumRenderer(this);
     }
 
     public void debug(final String msg) {

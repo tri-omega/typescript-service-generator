@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.rendering;
 
 import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeContainer;
 import org.omega.typescript.processor.model.TypeDefinition;
 
@@ -31,7 +32,11 @@ public class FileStorageStrategy implements StorageStrategy {
 
     @Override
     public BufferedWriter createWriter(TypeDefinition definition) throws IOException {
-        final File targetFile = new File("gen/" + getTypeFilename(definition)).getAbsoluteFile();
+        return getBufferedWriter(getFileName(definition));
+    }
+
+    private BufferedWriter getBufferedWriter(String filename) throws IOException {
+        final File targetFile = new File("gen/" + filename).getAbsoluteFile();
         if (targetFile.exists()) {
             final boolean result = targetFile.delete();
             if (!result) {
@@ -44,14 +49,10 @@ public class FileStorageStrategy implements StorageStrategy {
             }
         }
         return new BufferedWriter(new FileWriter(targetFile, false));
-//        return context.getProcessingEnv().getFiler().createResource(
-//                StandardLocation.SOURCE_OUTPUT,
-//                "", getTypeFilename(definition)
-//                ).openWriter();
     }
 
     @Override
-    public String getTypeFilename(final TypeDefinition definition) {
+    public String getFileName(final TypeDefinition definition) {
         return getName(definition) + ".ts";
     }
 
@@ -68,6 +69,30 @@ public class FileStorageStrategy implements StorageStrategy {
     @Override
     public String getRelativeFileName(final TypeDefinition from, final TypeDefinition to) {
         return "./" + getName(to);
+    }
+
+    @Override
+    public String getIncludeFileName(final Endpoint endpoint) {
+        return "./" + getName(endpoint);
+    }
+
+    @Override
+    public String getRelativeFileName(final Endpoint endpoint, final TypeDefinition to) {
+        return "./" + getName(to);
+    }
+
+    @Override
+    public String getFileName(final Endpoint endpoint) {
+        return getName(endpoint) + ".ts";
+    }
+
+    private String getName(final Endpoint endpoint) {
+        return endpoint.getControllerName() + ".generated";
+    }
+
+    @Override
+    public BufferedWriter createWriter(Endpoint endpoint) throws IOException {
+        return getBufferedWriter(getFileName(endpoint));
     }
 
 }
