@@ -4,8 +4,7 @@ import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,8 +20,8 @@ public class RenderUtils {
 
     // ------------------ Logic      --------------------
 
-    public static void renderImports(final Collection<TypeDefinition> usedTypes, final BufferedWriter writer, final Function<TypeDefinition, String> importPathResolver)
-        throws IOException {
+    public static void renderImports(final Collection<TypeDefinition> usedTypes, final PrintWriter writer,
+                                     final Function<TypeDefinition, String> importPathResolver) {
         final List<TypeDefinition> importTypes = usedTypes.stream()
                 .filter(Objects::nonNull)
                 .filter(t -> !t.isPredefined())
@@ -34,10 +33,9 @@ public class RenderUtils {
         final String imports = importTypes.stream()
                 .map(t -> "import {" + t.getTypeScriptName() + "} from '" + importPathResolver.apply(t) + "';")
                 .collect(Collectors.joining("\n"));
-        writer.append(imports);
         if (!imports.isEmpty()) {
-            writer.newLine();
-            writer.newLine();
+            writer.println(imports);
+            writer.println();
         }
 
     }

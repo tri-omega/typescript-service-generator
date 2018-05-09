@@ -3,7 +3,7 @@ package org.omega.typescript.processor.rendering;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 
-import java.io.BufferedWriter;
+import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 /**
@@ -29,23 +29,20 @@ public class EnumTypeRenderer extends BaseTypeRenderer {
     }
 
     @Override
-    protected void renderBody(final TypeDefinition enumDefinition, final BufferedWriter writer) throws Exception {
-        writer.append(String.format("export enum %s {", enumDefinition.getTypeScriptName()));
-        writer.newLine();
+    protected void renderBody(final TypeDefinition enumDefinition, final PrintWriter writer) {
+        writer.printf("export enum %s {\n", enumDefinition.getTypeScriptName());
         final String body = enumDefinition.getEnumConstants()
                 .stream()
                 .map(c -> "\t" + c.getName() + " = '" + c.getName() + "'")
                 .collect(Collectors.joining(",\n"));
         if (!body.isEmpty()) {
-            writer.append(body);
-            writer.newLine();
+            writer.println(body);
         }
-        writer.append("}");
-        writer.newLine();
+        writer.println("}");
     }
 
     @Override
-    protected void renderImports(final TypeDefinition definition, final BufferedWriter writer)  {
+    protected void renderImports(final TypeDefinition definition, final PrintWriter writer)  {
 
     }
 }

@@ -3,14 +3,19 @@ package org.omega.typescript.processor.rendering;
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeDefinition;
 
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by kibork on 5/2/2018.
  */
 public interface StorageStrategy {
-    BufferedWriter createWriter(TypeDefinition definition) throws IOException;
+    PrintWriter createWriter(TypeDefinition definition) throws IOException;
+
+    PrintWriter createWriter(String filename) throws IOException;
+
+    File getFile(String filename);
 
     String getFileName(TypeDefinition definition);
 
@@ -22,5 +27,5 @@ public interface StorageStrategy {
 
     String getFileName(Endpoint endpoint);
 
-    BufferedWriter createWriter(Endpoint endpoint) throws IOException;
+    PrintWriter createWriter(Endpoint endpoint) throws IOException;
 }

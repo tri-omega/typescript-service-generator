@@ -19,4 +19,8 @@ public final class StringUtils {
     public static boolean equals(final String str1, final String str2) {
         return str1 == null ? str2 == null : str1.equals(str2);
     }
+
+    public static String escapeString(final String str, final String escape) {
+        return str.replace(escape, "\\" + escape);
+    }
 }

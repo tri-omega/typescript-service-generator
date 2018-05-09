@@ -5,8 +5,10 @@ import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 import org.omega.typescript.processor.utils.RenderUtils;
 
-import java.io.BufferedWriter;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,13 +34,13 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
     }
 
     @Override
-    protected void renderBody(final TypeDefinition definition, final BufferedWriter writer) throws Exception {
+    protected void renderBody(final TypeDefinition definition, final PrintWriter writer) {
         writer.append("export interface ")
                 .append(definition.getTypeScriptName())
                 .append(getGenericDecl(definition))
                 .append(getExtendsDecl(definition.getSuperTypes(), ", "))
                 .append(" {");
-        writer.newLine();
+        writer.println();
         final TypeInstanceRenderer instanceRenderer = context.getInstanceRenderer();
 
         final String properties = definition.getProperties().stream()
@@ -46,10 +48,10 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
                 .collect(Collectors.joining("\n"));
         if (!properties.isEmpty()) {
             writer.append(properties);
-            writer.newLine();
+            writer.println();
         }
         writer.append("}");
-        writer.newLine();
+        writer.println();
     }
 
     private String getGenericDecl(final TypeDefinition definition) {
@@ -77,7 +79,7 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
     }
 
     @Override
-    protected void renderImports(final TypeDefinition definition, final BufferedWriter writer) throws Exception {
+    protected void renderImports(final TypeDefinition definition, final PrintWriter writer) {
         final Set<TypeDefinition> usedTypes = new HashSet<>();
         definition.getProperties().forEach(p -> RenderUtils.visitTypeInstance(usedTypes, p.getType()));
         definition.getSuperTypes().forEach(i -> RenderUtils.visitTypeInstance(usedTypes, i));

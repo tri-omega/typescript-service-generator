@@ -2,7 +2,9 @@ package org.omega.typescript.processor.test;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
 import org.omega.typescript.api.TypeScriptName;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by kibork on 3/6/2018.
@@ -72,7 +74,7 @@ public class BasicController {
 
     @CustomMapping
     @TypeScriptName("typeScriptMethodName")
-    public String customMethod() {
+    public String customMethod(long nonHttpParam) {
         return null;
     }
 

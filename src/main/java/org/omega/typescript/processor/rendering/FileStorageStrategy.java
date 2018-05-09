@@ -5,10 +5,7 @@ import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeContainer;
 import org.omega.typescript.processor.model.TypeDefinition;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by kibork on 5/2/2018.
@@ -26,16 +23,23 @@ public class FileStorageStrategy implements StorageStrategy {
     // ------------------ Logic      --------------------
 
 
-    public FileStorageStrategy(ProcessingContext context) {
+    public FileStorageStrategy(final ProcessingContext context) {
         this.context = context;
     }
 
     @Override
-    public BufferedWriter createWriter(TypeDefinition definition) throws IOException {
-        return getBufferedWriter(getFileName(definition));
+    public PrintWriter createWriter(final TypeDefinition definition) throws IOException {
+        return createWriter(getFileName(definition));
     }
 
-    private BufferedWriter getBufferedWriter(String filename) throws IOException {
+    @Override
+    public PrintWriter createWriter(final String filename) throws IOException {
+        final File targetFile = getFile(filename);
+        return new PrintWriter(new FileWriter(targetFile, false));
+    }
+
+    @Override
+    public File getFile(final String filename) {
         final File targetFile = new File("gen/" + filename).getAbsoluteFile();
         if (targetFile.exists()) {
             final boolean result = targetFile.delete();
@@ -48,7 +52,7 @@ public class FileStorageStrategy implements StorageStrategy {
                 context.error("Failed to create containing folder " + targetFile.getParentFile());
             }
         }
-        return new BufferedWriter(new FileWriter(targetFile, false));
+        return targetFile;
     }
 
     @Override
@@ -91,8 +95,8 @@ public class FileStorageStrategy implements StorageStrategy {
     }
 
     @Override
-    public BufferedWriter createWriter(Endpoint endpoint) throws IOException {
-        return getBufferedWriter(getFileName(endpoint));
+    public PrintWriter createWriter(final Endpoint endpoint) throws IOException {
+        return createWriter(getFileName(endpoint));
     }
 
 }

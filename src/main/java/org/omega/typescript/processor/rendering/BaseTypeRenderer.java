@@ -2,7 +2,7 @@ package org.omega.typescript.processor.rendering;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 
-import java.io.BufferedWriter;
+import java.io.PrintWriter;
 
 /**
  * Created by kibork on 5/2/2018.
@@ -28,7 +28,7 @@ public abstract class BaseTypeRenderer implements TypeDefinitionRenderer {
             throw new IllegalArgumentException("Invalid renderer for type " + definition);
         }
 
-        try (BufferedWriter writer = context.getStorageStrategy().createWriter(definition)) {
+        try (PrintWriter writer = context.getStorageStrategy().createWriter(definition)) {
             renderImports(definition, writer);
             renderBody(definition, writer);
         } catch (Exception ex) {
@@ -36,7 +36,7 @@ public abstract class BaseTypeRenderer implements TypeDefinitionRenderer {
         }
     }
 
-    protected abstract void renderBody(TypeDefinition definition, BufferedWriter writer) throws Exception;
+    protected abstract void renderBody(TypeDefinition definition, PrintWriter writer) throws Exception;
 
-    protected abstract void renderImports(TypeDefinition definition, BufferedWriter writer) throws Exception;
+    protected abstract void renderImports(TypeDefinition definition, PrintWriter writer) throws Exception;
 }

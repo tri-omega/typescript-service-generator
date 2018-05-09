@@ -5,6 +5,7 @@ import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.TypeOracle;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
+import org.omega.typescript.processor.utils.IOUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class TypeScriptRenderer implements Renderer {
 
     private EndpointRenderer endpointRenderer;
 
+    private ModuleRenderer moduleRenderer;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -36,6 +39,7 @@ public class TypeScriptRenderer implements Renderer {
         addDefinitionRenderer(new EnumTypeRenderer(context));
 
         endpointRenderer = new EndpointRenderer(context);
+        moduleRenderer = new ModuleRenderer(context);
     }
 
     private void addDefinitionRenderer(TypeDefinitionRenderer renderer) {
@@ -59,9 +63,13 @@ public class TypeScriptRenderer implements Renderer {
 
     @Override
     public synchronized void renderEndpoints(final EndpointContainer endpointContainer) {
+        IOUtils.copyResource("/ts/service-api.ts", context.getStorageStrategy().getFile("std/service-api.ts"));
+
         endpointContainer.getEndpointMap()
                 .values()
                 .forEach(endpoint -> endpointRenderer.renderEndpoint(endpoint));
+
+        moduleRenderer.renderModuleDefinition(endpointContainer.getEndpointMap().values());
     }
 
 }
