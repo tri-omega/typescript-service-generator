@@ -43,9 +43,9 @@ public class SimplePropertyBuilderTest {
         
         assertEquals(3, properties.size());
 
-        TestUtils.checkProperty(properties.get(0), "field1", "getField1", "String");
-        TestUtils.checkProperty(properties.get(1), "field2", "getField2", "long");
-        TestUtils.checkProperty(properties.get(2), "customName", "getField3", "Integer");
+        TestUtils.checkProperty(properties.get(0), "field1", "String");
+        TestUtils.checkProperty(properties.get(1), "field2", "long");
+        TestUtils.checkProperty(properties.get(2), "customName", "Integer");
     }
 
 }

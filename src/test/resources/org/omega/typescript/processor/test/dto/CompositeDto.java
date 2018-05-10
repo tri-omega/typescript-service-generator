@@ -1,20 +1,19 @@
 package org.omega.typescript.processor.test.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * Created by kibork on 4/3/2018.
  */
-@Data
 public class CompositeDto {
 
     // ------------------ Constants  --------------------
 
     // ------------------ Fields     --------------------
 
-    private String field1;
+    @Getter private String field1;
 
-    private final SimpleDto simpleDto;
+    @Getter private final SimpleDto simpleDto = null;
 
     // ------------------ Properties --------------------
 

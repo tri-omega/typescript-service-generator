@@ -1,0 +1,2 @@
+org.omega.typescript.processor.builders.properties.JavaBeanPropertyLocator
+org.omega.typescript.processor.builders.properties.LombokPropertyLocator

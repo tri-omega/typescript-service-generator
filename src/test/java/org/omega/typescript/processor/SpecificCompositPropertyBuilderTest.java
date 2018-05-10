@@ -43,7 +43,7 @@ public class SpecificCompositPropertyBuilderTest {
         
         assertEquals(1, properties.size());
 
-        checkProperty(properties.get(0), "newProperty", "getNewProperty", "String");
+        checkProperty(properties.get(0), "newProperty", "String");
         
         assertEquals(2, type.getSuperTypes().size());
 
@@ -59,7 +59,7 @@ public class SpecificCompositPropertyBuilderTest {
             assertEquals(0, superInterface.getSuperTypes().size());
 
             assertEquals(1, superInterface.getProperties().size());
-            checkProperty(superInterface.getProperties().get(0), "name", "getName", "String");
+            checkProperty(superInterface.getProperties().get(0), "name", "String");
         }
     }
 

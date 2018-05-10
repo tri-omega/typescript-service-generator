@@ -10,8 +10,6 @@ public class PropertyDefinition {
 
     private String name;
 
-    private String getterName;
-
     private TypeInstanceDefinition type;
 
 }

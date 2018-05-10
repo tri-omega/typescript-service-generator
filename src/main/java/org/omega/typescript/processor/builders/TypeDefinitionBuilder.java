@@ -2,6 +2,7 @@ package org.omega.typescript.processor.builders;
 
 import org.omega.typescript.api.TypeScriptName;
 import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.builders.properties.PropertyDefinitionBuilder;
 import org.omega.typescript.processor.model.EnumConstant;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
@@ -81,7 +82,7 @@ public class TypeDefinitionBuilder {
 
         typeDefinition.getProperties()
                 .addAll(
-                        propertyDefinitionBuilder.buildPropertyGetters(typeElement)
+                        propertyDefinitionBuilder.buildProperties(typeElement)
                 );
 
         readSuperclass(typeDefinition, typeElement);

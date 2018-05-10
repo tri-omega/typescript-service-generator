@@ -170,9 +170,12 @@ public final class AnnotationUtils {
         final DeclaredType annotationType = am.getAnnotationType();
         final Element element = annotationType.asElement();
         if (element.getKind() == ElementKind.ANNOTATION_TYPE) {
-            return ((TypeElement) element).getQualifiedName().toString();
+            return ((QualifiedNameable) element).getQualifiedName().toString();
+        } else if  (element.getKind() == ElementKind.CLASS) {
+            //User annotation without a loaded definition. Let if be someone else issue
+            return null;
         } else {
-            throw new IllegalArgumentException("Annotation mirror " + am + " has no annotation type");
+            throw new IllegalArgumentException("Annotation mirror " + am + " has no annotation type, kind = " + element.getKind());
         }
     }
 

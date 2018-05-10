@@ -28,22 +28,22 @@ public class TestUtils {
         final EndpointProcessorSingleton endpointProcessorSingleton = EndpointProcessorSingleton.getInstance();
         endpointProcessorSingleton.clear();
 
-        Compilation compilation = Compiler.javac()
-                .withProcessors(new ServiceEndpointProcessor())
-                .compile(simpleControllerObject);
+        try {
+            Compilation compilation = Compiler.javac()
+                    .withProcessors(new ServiceEndpointProcessor())
+                    .compile(simpleControllerObject);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
 
         return endpointProcessorSingleton;
     }
 
 
-    static void checkProperty(PropertyDefinition propertyDefinition, String tsName, String getterName, String typeName) {
-        assertEquals(tsName, propertyDefinition.getName());
-        assertEquals(getterName, propertyDefinition.getGetterName());
-        assertEquals(typeName, propertyDefinition.getType().getShortName());
-    }
-
     static void checkProperty(PropertyDefinition propertyDefinition, String tsName, String typeName) {
         assertEquals(tsName, propertyDefinition.getName());
         assertEquals(typeName, propertyDefinition.getType().getShortName());
     }
+
 }

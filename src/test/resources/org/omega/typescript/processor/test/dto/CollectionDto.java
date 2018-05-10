@@ -28,6 +28,15 @@ public class CollectionDto {
 
     // ------------------ Properties --------------------
 
+    public String[] getStringArray() {
+        return stringArray;
+    }
+
+    public List<String> getStringList() {
+        return stringList;
+    }
+
+
     // ------------------ Logic      --------------------
 
 }

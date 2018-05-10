@@ -44,8 +44,8 @@ public class CompositPropertyBuilderTest {
         
         assertEquals(2, properties.size());
 
-        checkProperty(properties.get(0), "field1", "getField1", "String");
-        checkProperty(properties.get(1), "simpleDto", "getSimpleDto", "SimpleDto");
+        checkProperty(properties.get(0), "field1", "String");
+        checkProperty(properties.get(1), "simpleDto", "SimpleDto");
     }
 
 
