@@ -6,6 +6,7 @@ import com.google.testing.compile.JavaFileObjects;
 import org.omega.typescript.processor.model.PropertyDefinition;
 
 import javax.tools.JavaFileObject;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,18 +24,20 @@ public class TestUtils {
     // ------------------ Logic      --------------------
 
 
-    public static EndpointProcessorSingleton compileClass(final String resourceName) {
-        final JavaFileObject simpleControllerObject = JavaFileObjects.forResource(TestUtils.class.getResource(resourceName));
+    public static EndpointProcessorSingleton compileClass(final String... resourceNames) {
         final EndpointProcessorSingleton endpointProcessorSingleton = EndpointProcessorSingleton.getInstance();
         endpointProcessorSingleton.clear();
+        Arrays.stream(resourceNames).forEach(resourceName -> {
+            final JavaFileObject simpleControllerObject = JavaFileObjects.forResource(TestUtils.class.getResource(resourceName));
 
-        try {
-            Compilation compilation = Compiler.javac()
-                    .withProcessors(new ServiceEndpointProcessor())
-                    .compile(simpleControllerObject);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            try {
+                Compilation compilation = Compiler.javac()
+                        .withProcessors(new ServiceEndpointProcessor())
+                        .compile(simpleControllerObject);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
         return endpointProcessorSingleton;

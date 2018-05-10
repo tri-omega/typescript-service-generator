@@ -22,7 +22,7 @@ public abstract class SpecificCompositeDto extends CompositeDto implements HasNa
 
 
     public SpecificCompositeDto(SimpleDto simpleDto, String newProperty) {
-        super(simpleDto);
+        super();
         this.newProperty = newProperty;
     }
 }

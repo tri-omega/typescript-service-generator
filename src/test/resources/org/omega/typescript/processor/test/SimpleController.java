@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by kibork on 2/5/2018.
  */
 @RestController
-@TypeScriptEndpoint
+@TypeScriptEndpoint(moduleName = "SimpleController")
 @RequestMapping(method = RequestMethod.POST, path = "/api/simple")
 public class SimpleController {
 

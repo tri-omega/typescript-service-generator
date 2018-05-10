@@ -13,7 +13,7 @@ import java.util.List;
  * Created by kibork on 4/3/2018.
  */
 @RestController
-@TypeScriptEndpoint
+@TypeScriptEndpoint(moduleName = "SimpleDtoController")
 @RequestMapping(method = RequestMethod.GET, path = "/api/")
 public class SimpleDtoController {
 

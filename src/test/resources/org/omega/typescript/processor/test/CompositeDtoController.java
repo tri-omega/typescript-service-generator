@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by kibork on 4/3/2018.
  */
 @RestController
-@TypeScriptEndpoint
+@TypeScriptEndpoint(moduleName = "CompositeDtoController")
 @RequestMapping(method = RequestMethod.GET, path = "/api/")
 public class CompositeDtoController {
 

@@ -3,6 +3,8 @@ package org.omega.typescript.processor.builders;
 import org.omega.typescript.api.TypeScriptEndpoint;
 import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.Endpoint;
+import org.omega.typescript.processor.utils.AnnotationUtils;
+import org.omega.typescript.processor.utils.ResolvedAnnotationValues;
 import org.omega.typescript.processor.utils.StringUtils;
 import org.omega.typescript.processor.utils.TypeUtils;
 
@@ -44,8 +46,9 @@ public class EndpointDefinitionBuilder {
 
         endpoint.setMappingDefinition(mappingDefinitionBuilder.build(type));
 
-        Optional.ofNullable(type.getAnnotation(TypeScriptEndpoint.class))
-                .ifPresent(annotation -> processMetadata(context, annotation, endpoint, type));
+        final Optional<ResolvedAnnotationValues> endpointDefinition = AnnotationUtils.resolveAnnotation(TypeScriptEndpoint.class, type, context);
+        endpointDefinition.ifPresent(annotation -> processMetadata(context, annotation, endpoint, type));
+
 
         readMethodDefinitions(type, endpoint);
 
@@ -62,13 +65,16 @@ public class EndpointDefinitionBuilder {
         );
     }
 
-    private void processMetadata(final ProcessingContext context, final TypeScriptEndpoint annotation, final Endpoint endpoint, final Element type) {
-        final String userName = annotation.name();
+    private void processMetadata(final ProcessingContext context, final ResolvedAnnotationValues annotation, final Endpoint endpoint, final Element type) {
+        final String userName = annotation.readString("name", "", context);
         if (StringUtils.hasText(userName)) {
             endpoint.setControllerName(userName);
         } else {
             endpoint.setControllerName(type.getSimpleName().toString());
         }
+
+        final String moduleName = annotation.readString("moduleName", "", context);
+        endpoint.setModuleName(moduleName);
     }
 
 }

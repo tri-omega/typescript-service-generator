@@ -43,5 +43,6 @@ class SimpleEndpointDefinitionBuilderTest {
         Assert.assertEquals("NamedController", endpoint.getControllerName());
         Assert.assertFalse(endpoint.getMappingDefinition().isPresent());
         Assert.assertEquals("org.omega.typescript.processor.test.NamedSimpleController", endpoint.getControllerClassName());
+        Assert.assertEquals("NamedSimpleControllerModule", endpoint.getModuleName());
     }
 }

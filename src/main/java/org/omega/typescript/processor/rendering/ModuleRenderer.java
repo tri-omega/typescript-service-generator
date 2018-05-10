@@ -1,11 +1,13 @@
 package org.omega.typescript.processor.rendering;
 
 import org.omega.typescript.processor.model.Endpoint;
+import org.omega.typescript.processor.utils.StringUtils;
 
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -17,6 +19,8 @@ public class ModuleRenderer {
 
     private final RenderingContext context;
 
+    private final String defaultModuleName = "api";
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -26,7 +30,20 @@ public class ModuleRenderer {
     }
 
     public void renderModuleDefinition(final Collection<Endpoint> endpoints) {
-        try (PrintWriter writer = context.getStorageStrategy().createWriter("api.module.ts")) {
+        final Map<String, List<Endpoint>> moduleMap = endpoints.stream()
+                .collect(Collectors.groupingBy(Endpoint::getModuleName));
+
+        moduleMap.forEach((name, moduleEndpoints) -> renderModule(moduleEndpoints, name));
+    }
+
+    private void renderModule(final Collection<Endpoint> endpoints, String moduleName) {
+        if (!StringUtils.hasText(moduleName)) {
+            moduleName = defaultModuleName;
+        }
+        if (!moduleName.endsWith(".module.ts")) {
+            moduleName += ".module.ts";
+        }
+        try (PrintWriter writer = context.getStorageStrategy().createWriter(moduleName)) {
             writer.println("import {NgModule} from '@angular/core';\n");
 
             final List<Endpoint> endpointList = endpoints.stream()

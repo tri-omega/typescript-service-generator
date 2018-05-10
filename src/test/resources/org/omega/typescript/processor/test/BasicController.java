@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Created by kibork on 3/6/2018.
  */
 @RestController
-@TypeScriptEndpoint
+@TypeScriptEndpoint(moduleName = "BasicController")
 @RequestMapping(method = RequestMethod.GET, path = "/api/")
 public class BasicController {
 

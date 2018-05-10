@@ -21,6 +21,8 @@ public class Endpoint {
 
     private String controllerName;
 
+    private String moduleName;
+
     private Optional<MappingDefinition> mappingDefinition = Optional.empty();
 
     private List<EndpointMethod> endpointMethods = new ArrayList<>();

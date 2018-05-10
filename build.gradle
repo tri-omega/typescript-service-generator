@@ -34,12 +34,12 @@ ext.versions = [
         lombok: '1.16.20'
 ]
 
-//idea {
-//    module {
-//        // Marks the already(!) added srcDir as "generated"
-//        generatedSourceDirs += file( "${projectDir}/src/test/resources")
-//    }
-//}
+idea {
+    module {
+        // Marks the already(!) added srcDir as "generated"
+        generatedSourceDirs += file( "${projectDir}/src/test/resources")
+    }
+}
 
 sourceSets {
     test {
