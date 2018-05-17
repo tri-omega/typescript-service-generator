@@ -9,7 +9,7 @@ import org.omega.typescript.processor.model.TypeDefinition;
 public interface FileNamingStrategy {
     String getFullTypeFileName(TypeDefinition definition);
 
-    String getRelativeFileName(Endpoint endpoint, String toTargetFolder);
+    String getRelativeFileName(Endpoint endpoint, String toFile);
 
     String getRelativeFileName(TypeDefinition from, TypeDefinition to);
 

@@ -59,7 +59,7 @@ public class EndpointRenderer {
                                 context.getGenConfig().getDefaultHttpClassName(),
                                 context.getGenConfig().getDefaultHttpServiceInclude()),
                         String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
-                                context.getNamingStrategy().getRelativeFileName(endpoint, "std/service-api")
+                                context.getNamingStrategy().getRelativeFileName(endpoint, context.getGenConfig().getStdFileName())
                         )
 
                 ).map(String::trim)

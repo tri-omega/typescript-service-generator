@@ -137,8 +137,12 @@ public class GenConfigBasedNamingStrategy implements FileNamingStrategy {
     }
 
     @Override
-    public String getRelativeFileName(final Endpoint endpoint, final String toTargetFolder) {
-        return getRelativePath(getTargetFolder(endpoint.getContainer().getPackageName()), genConfig.getOutputFolder() + toTargetFolder);
+    public String getRelativeFileName(final Endpoint endpoint, final String toFile) {
+        final String path = getRelativePath(getTargetFolder(endpoint.getContainer().getPackageName()), genConfig.getOutputFolder() + toFile);
+        if (path.endsWith("/")) {
+            return path.substring(0, path.length() - 1);
+        }
+        return path;
     }
 
     @Override

@@ -24,6 +24,8 @@ public class GenConfig {
 
     private String outputFolder = "get/";
 
+    private String stdFileName;
+
     private String generatedFilesSuffix = ".generated";
 
     private String defaultModuleName = "service-api";
@@ -90,6 +92,8 @@ public class GenConfig {
             generatedFilesSuffix = value;
         } else if ("service-includes".equalsIgnoreCase(propertyName)) {
             additionalServiceIncludes = value;
+        } else if ("std-file-name".equalsIgnoreCase(propertyName)) {
+            stdFileName = value;
         } else {
             context.error(String.format("Unknown tsg property %s with value %s, tsg is a reserved prefix", propertyName, value));
         }
