@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.model.TypeKind;
@@ -9,19 +9,19 @@ import java.util.stream.Collectors;
 /**
  * Created by kibork on 5/2/2018.
  */
-public class TypeInstanceRenderer {
+public class TypeInstanceEmitter {
 
     // ------------------ Constants  --------------------
 
     // ------------------ Fields     --------------------
 
-    private final RenderingContext context;
+    private final EmitContext context;
 
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
 
-    public TypeInstanceRenderer(final RenderingContext context) {
+    public TypeInstanceEmitter(final EmitContext context) {
         this.context = context;
     }
 

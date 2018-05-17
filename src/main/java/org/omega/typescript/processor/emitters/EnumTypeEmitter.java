@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Created by kibork on 5/2/2018.
  */
-public class EnumTypeRenderer extends BaseTypeRenderer {
+public class EnumTypeEmitter extends BaseTypeEmitter {
 
     // ------------------ Constants  --------------------
 
@@ -19,7 +19,7 @@ public class EnumTypeRenderer extends BaseTypeRenderer {
 
     // ------------------ Logic      --------------------
 
-    public EnumTypeRenderer(final RenderingContext context) {
+    public EnumTypeEmitter(final EmitContext context) {
         super(context);
     }
 

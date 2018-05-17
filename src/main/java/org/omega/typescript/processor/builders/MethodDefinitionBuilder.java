@@ -1,10 +1,10 @@
 package org.omega.typescript.processor.builders;
 
 import org.omega.typescript.api.TypeScriptName;
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.EndpointMethod;
 import org.omega.typescript.processor.model.MappingDefinition;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.StringUtils;
 
 import javax.lang.model.element.ExecutableElement;

@@ -28,6 +28,7 @@ class SimpleEndpointDefinitionBuilderTest {
         Assert.assertEquals("SimpleController", endpoint.getControllerName());
         Assert.assertEquals("/api/simple", endpoint.getMappingDefinition().get().getUrlTemplate());
         Assert.assertEquals("org.omega.typescript.processor.test.SimpleController", endpoint.getControllerClassName());
+        Assert.assertEquals("org.omega.typescript.processor.test", endpoint.getContainer().getFullName());
     }
 
     @Test

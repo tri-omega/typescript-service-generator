@@ -23,4 +23,14 @@ public final class StringUtils {
     public static String escapeString(final String str, final String escape) {
         return str.replace(escape, "\\" + escape);
     }
+
+    public static String endWith(final String str, final String suffix) {
+        if (str == null) {
+            return null;
+        }
+        if (str.endsWith(suffix)) {
+            return str;
+        }
+        return str + suffix;
+    }
 }

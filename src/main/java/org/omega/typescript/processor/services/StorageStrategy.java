@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.services;
 
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeDefinition;
@@ -16,16 +16,6 @@ public interface StorageStrategy {
     PrintWriter createWriter(String filename) throws IOException;
 
     File getFile(String filename);
-
-    String getFileName(TypeDefinition definition);
-
-    String getRelativeFileName(TypeDefinition from, TypeDefinition to);
-
-    String getIncludeFileName(Endpoint endpoint);
-
-    String getRelativeFileName(Endpoint endpoint, TypeDefinition to);
-
-    String getFileName(Endpoint endpoint);
 
     PrintWriter createWriter(Endpoint endpoint) throws IOException;
 }

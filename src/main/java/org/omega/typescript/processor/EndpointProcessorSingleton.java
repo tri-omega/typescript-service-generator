@@ -1,8 +1,11 @@
 package org.omega.typescript.processor;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
-import org.omega.typescript.processor.rendering.Renderer;
-import org.omega.typescript.processor.rendering.TypeScriptRenderer;
+import org.omega.typescript.processor.services.ProcessingContext;
+import org.omega.typescript.processor.model.EndpointContainer;
+import org.omega.typescript.processor.model.TypeOracle;
+import org.omega.typescript.processor.emitters.Emitter;
+import org.omega.typescript.processor.emitters.TypeScriptEmitter;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -30,7 +33,7 @@ public final class EndpointProcessorSingleton {
 
     private TypeOracle oracle = new TypeOracle();
 
-    private Renderer renderer;
+    private Emitter emitter;
 
     // ------------------ Properties --------------------
 
@@ -50,7 +53,7 @@ public final class EndpointProcessorSingleton {
 
 
     private EndpointProcessorSingleton() {
-        renderer = new TypeScriptRenderer();
+        emitter = new TypeScriptEmitter();
     }
 
     public void clear() {
@@ -78,9 +81,9 @@ public final class EndpointProcessorSingleton {
         });
 
         if (hasNew.get()) {
-            renderer.initContext(context);
-            renderer.renderTypes(oracle);
-            renderer.renderEndpoints(endpointContainer);
+            emitter.initContext(context);
+            emitter.renderTypes(oracle);
+            emitter.renderEndpoints(endpointContainer);
         }
 
     }

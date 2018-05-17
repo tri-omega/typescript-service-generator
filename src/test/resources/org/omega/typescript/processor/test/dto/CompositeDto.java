@@ -13,7 +13,7 @@ public class CompositeDto {
 
     @Getter private String field1;
 
-    @Getter private final SimpleDto simpleDto = null;
+    @Getter private final SimpleDto simpleDto = new SimpleDto();
 
     // ------------------ Properties --------------------
 

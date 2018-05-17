@@ -1,4 +1,4 @@
-package org.omega.typescript.processor;
+package org.omega.typescript.processor.utils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;

@@ -1,6 +1,8 @@
-package org.omega.typescript.processor;
+package org.omega.typescript.processor.services;
 
-import org.omega.typescript.processor.builders.TypeInstanceBuilder;
+import org.omega.typescript.processor.model.EndpointContainer;
+import org.omega.typescript.processor.model.TypeOracle;
+import org.omega.typescript.processor.utils.LogUtil;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;

@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.EndpointMethod;
 import org.omega.typescript.processor.model.MappingDefinition;
@@ -14,17 +14,17 @@ import java.util.stream.Stream;
 /**
  * Created by kibork on 5/8/2018.
  */
-public class MethodRenderer {
+public class MethodEmitter {
 
     // ---------------- Fields & Constants --------------
 
     // ------------------ Properties --------------------
 
-    private final RenderingContext context;
+    private final EmitContext context;
 
     // ------------------ Logic      --------------------
 
-    public MethodRenderer(final RenderingContext context) {
+    public MethodEmitter(final EmitContext context) {
         this.context = context;
     }
 

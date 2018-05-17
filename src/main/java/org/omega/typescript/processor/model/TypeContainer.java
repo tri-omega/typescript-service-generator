@@ -24,4 +24,13 @@ public class TypeContainer {
 
     // ------------------ Logic      --------------------
 
+    public String getPackageName() {
+        if (packageElement) {
+            return fullName;
+        } else if (container != null) {
+            return container.getPackageName();
+        }
+        return null;
+    }
+
 }

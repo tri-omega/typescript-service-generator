@@ -1,14 +1,17 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import lombok.Getter;
-import org.omega.typescript.processor.LogUtil;
-import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.GenConfig;
+import org.omega.typescript.processor.services.FileNamingStrategy;
+import org.omega.typescript.processor.services.ProcessingContext;
+import org.omega.typescript.processor.services.StorageStrategy;
+import org.omega.typescript.processor.utils.LogUtil;
 
 /**
  * Created by kibork on 5/2/2018.
  */
 @Getter
-public class RenderingContext {
+public class EmitContext {
 
     // ------------------ Constants  --------------------
 
@@ -18,7 +21,11 @@ public class RenderingContext {
 
     private final StorageStrategy storageStrategy;
 
-    private final TypeInstanceRenderer instanceRenderer;
+    private final FileNamingStrategy namingStrategy;
+
+    private final TypeInstanceEmitter instanceRenderer;
+
+    private final GenConfig genConfig;
 
     // ------------------ Properties --------------------
 
@@ -26,10 +33,12 @@ public class RenderingContext {
     // ------------------ Logic      --------------------
 
 
-    public RenderingContext(final ProcessingContext processingContext, final StorageStrategy storageStrategy) {
+    public EmitContext(final ProcessingContext processingContext, final FileNamingStrategy namingStrategy, final StorageStrategy storageStrategy, final GenConfig genConfig) {
         this.processingContext = processingContext;
+        this.namingStrategy = namingStrategy;
         this.storageStrategy = storageStrategy;
-        this.instanceRenderer = new TypeInstanceRenderer(this);
+        this.instanceRenderer = new TypeInstanceEmitter(this);
+        this.genConfig = genConfig;
     }
 
     public void debug(final String msg) {

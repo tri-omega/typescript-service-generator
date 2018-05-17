@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeDefinition;
@@ -19,17 +19,17 @@ public class EndpointRenderer {
 
     // ------------------ Fields     --------------------
 
-    private final RenderingContext context;
+    private final EmitContext context;
 
-    private final MethodRenderer methodRenderer;
+    private final MethodEmitter methodEmitter;
 
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
 
-    public EndpointRenderer(final RenderingContext context) {
+    public EndpointRenderer(final EmitContext context) {
         this.context = context;
-        this.methodRenderer = new MethodRenderer(context);
+        this.methodEmitter = new MethodEmitter(context);
     }
 
     public void renderEndpoint(final Endpoint endpoint) {
@@ -48,14 +48,16 @@ public class EndpointRenderer {
             method.getParams().forEach(p -> RenderUtils.visitTypeInstance(usedTypes, p.getType()));
         });
 
-        RenderUtils.renderImports(usedTypes, writer, (d) -> context.getStorageStrategy().getRelativeFileName(endpoint, d));
+        RenderUtils.renderImports(usedTypes, writer, (d) -> context.getNamingStrategy().getRelativeFileName(endpoint, d));
 
         //Render implicit imports
         writer.println(
                 Stream.of(
                         "import {Injectable} from '@angular/core';",
                         "import {Observable} from 'rxjs/Observable';",
-                        "import {HttpRequestMapping,RequestMethod,MethodParamMapping} from './std/service-api';"
+                        String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
+                                context.getNamingStrategy().getRelativeFileName(endpoint, "std/service-api")
+                        )
 
                 ).collect(Collectors.joining("\n"))
         );
@@ -68,7 +70,7 @@ public class EndpointRenderer {
 
         renderDefaultMapping(endpoint, writer);
 
-        endpoint.getEndpointMethods().forEach(method -> methodRenderer.renderMethod(method, writer));
+        endpoint.getEndpointMethods().forEach(method -> methodEmitter.renderMethod(method, writer));
 
         writer.println("}\n");
     }
@@ -76,7 +78,7 @@ public class EndpointRenderer {
     private void renderDefaultMapping(Endpoint endpoint, PrintWriter writer) {
         writer.print("\tdefaultRequestMapping:HttpRequestMapping = ");
         if (endpoint.getMappingDefinition().isPresent()) {
-            methodRenderer.renderMapping(writer, endpoint.getMappingDefinition().get()).println(";");
+            methodEmitter.renderMapping(writer, endpoint.getMappingDefinition().get()).println(";");
         } else {
             writer.println("null;");
         }

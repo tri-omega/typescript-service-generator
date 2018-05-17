@@ -1,7 +1,7 @@
 package org.omega.typescript.processor.builders;
 
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.TypeContainer;
+import org.omega.typescript.processor.services.ProcessingContext;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -38,8 +38,8 @@ public class TypeContainerBuilder {
                     .setFullName(shortName)
                 ;
 
-        if (element instanceof QualifiedNameable) {
-            typeContainer.setFullName(((QualifiedNameable)element).getQualifiedName().toString());
+        if (enclosingElement instanceof QualifiedNameable) {
+            typeContainer.setFullName(((QualifiedNameable)enclosingElement).getQualifiedName().toString());
         }
         if (enclosingElement.getKind() != ElementKind.PACKAGE) {
             typeContainer.setPackageElement(false);

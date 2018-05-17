@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 
@@ -7,18 +7,18 @@ import java.io.PrintWriter;
 /**
  * Created by kibork on 5/2/2018.
  */
-public abstract class BaseTypeRenderer implements TypeDefinitionRenderer {
+public abstract class BaseTypeEmitter implements TypeDefinitionEmitter {
 
     // ------------------ Fields     --------------------
 
-    protected final RenderingContext context;
+    protected final EmitContext context;
 
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
 
 
-    public BaseTypeRenderer(final RenderingContext context) {
+    public BaseTypeEmitter(final EmitContext context) {
         this.context = context;
     }
 

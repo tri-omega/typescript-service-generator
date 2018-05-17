@@ -1,7 +1,7 @@
 package org.omega.typescript.processor.builders.properties;
 
 import org.omega.typescript.api.TypeScriptIgnore;
-import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.model.PropertyDefinition;
 import org.omega.typescript.processor.utils.AnnotationUtils;
 import org.omega.typescript.processor.utils.TypeUtils;

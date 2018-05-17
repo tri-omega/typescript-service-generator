@@ -1,6 +1,6 @@
 package org.omega.typescript.processor.utils;
 
-import org.omega.typescript.processor.ProcessingContext;
+import org.omega.typescript.processor.services.ProcessingContext;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;

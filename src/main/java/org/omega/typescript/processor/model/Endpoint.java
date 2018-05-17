@@ -27,6 +27,8 @@ public class Endpoint {
 
     private List<EndpointMethod> endpointMethods = new ArrayList<>();
 
+    private TypeContainer container = null;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------

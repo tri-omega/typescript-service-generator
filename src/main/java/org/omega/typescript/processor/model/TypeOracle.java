@@ -1,11 +1,13 @@
-package org.omega.typescript.processor;
+package org.omega.typescript.processor.model;
 
+import org.omega.typescript.processor.PredefinedTypes;
+import org.omega.typescript.processor.builders.TypeContainerBuilder;
 import org.omega.typescript.processor.builders.TypeDefinitionBuilder;
 import org.omega.typescript.processor.builders.TypeInstanceBuilder;
-import org.omega.typescript.processor.model.TypeDefinition;
-import org.omega.typescript.processor.model.TypeInstanceDefinition;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.TypeUtils;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
@@ -29,11 +31,14 @@ public class TypeOracle {
 
     private TypeInstanceBuilder typeInstanceBuilder;
 
+    private TypeContainerBuilder typeContainerBuilder;
+
     private ProcessingContext context;
 
     private TypeMirror collectionType;
 
     private TypeMirror mapType;
+
     private TypeElement mapElement;
 
     // ------------------ Properties --------------------
@@ -53,6 +58,7 @@ public class TypeOracle {
         this.context = context;
         this.typeDefinitionBuilder = new TypeDefinitionBuilder(context);
         this.typeInstanceBuilder = new TypeInstanceBuilder(context);
+        this.typeContainerBuilder = new TypeContainerBuilder(context);
 
         this.collectionType = context.getProcessingEnv().getTypeUtils().erasure(
                 context.getProcessingEnv().getElementUtils().getTypeElement(Collection.class.getName())
@@ -136,6 +142,10 @@ public class TypeOracle {
         }
 
         return typeDefinitionBuilder.buildClassDefinition(typeElement);
+    }
+
+    public TypeContainer buildContainer(final Element element) {
+        return typeContainerBuilder.buildContainer(element);
     }
 
 }

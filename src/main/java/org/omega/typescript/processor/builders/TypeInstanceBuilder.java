@@ -1,8 +1,8 @@
 package org.omega.typescript.processor.builders;
 
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
+import org.omega.typescript.processor.services.ProcessingContext;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;

@@ -1,11 +1,13 @@
-package org.omega.typescript.processor;
+package org.omega.typescript.processor.model;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
 import org.omega.typescript.processor.builders.EndpointDefinitionBuilder;
-import org.omega.typescript.processor.model.Endpoint;
+import org.omega.typescript.processor.services.ProcessingContext;
 
-import javax.lang.model.element.*;
-import java.util.*;
+import javax.lang.model.element.TypeElement;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

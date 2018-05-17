@@ -1,9 +1,9 @@
 package org.omega.typescript.processor.builders;
 
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.EndpointMethod;
 import org.omega.typescript.processor.model.MethodParameter;
 import org.omega.typescript.processor.model.PathVariableDefinition;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.AnnotationUtils;
 import org.omega.typescript.processor.utils.ResolvedAnnotationValues;
 import org.springframework.web.bind.annotation.PathVariable;

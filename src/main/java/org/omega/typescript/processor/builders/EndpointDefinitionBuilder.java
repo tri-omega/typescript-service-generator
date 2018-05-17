@@ -1,8 +1,8 @@
 package org.omega.typescript.processor.builders;
 
 import org.omega.typescript.api.TypeScriptEndpoint;
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.model.Endpoint;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.AnnotationUtils;
 import org.omega.typescript.processor.utils.ResolvedAnnotationValues;
 import org.omega.typescript.processor.utils.StringUtils;
@@ -45,6 +45,8 @@ public class EndpointDefinitionBuilder {
         final Endpoint endpoint = new Endpoint(controllerClassName);
 
         endpoint.setMappingDefinition(mappingDefinitionBuilder.build(type));
+
+        endpoint.setContainer(context.getTypeOracle().buildContainer(type));
 
         final Optional<ResolvedAnnotationValues> endpointDefinition = AnnotationUtils.resolveAnnotation(TypeScriptEndpoint.class, type, context);
         endpointDefinition.ifPresent(annotation -> processMetadata(context, annotation, endpoint, type));

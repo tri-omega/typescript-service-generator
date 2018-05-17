@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by kibork on 4/24/2018.
  */
-public class InterfaceTypeRenderer extends BaseTypeRenderer {
+public class InterfaceTypeEmitter extends BaseTypeEmitter {
 
     // ------------------ Constants  --------------------
 
@@ -25,7 +25,7 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
     // ------------------ Logic      --------------------
 
 
-    public InterfaceTypeRenderer(final RenderingContext context) {
+    public InterfaceTypeEmitter(final EmitContext context) {
         super(context);
     }
 
@@ -41,7 +41,7 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
                 .append(getExtendsDecl(definition.getSuperTypes(), ", "))
                 .append(" {");
         writer.println();
-        final TypeInstanceRenderer instanceRenderer = context.getInstanceRenderer();
+        final TypeInstanceEmitter instanceRenderer = context.getInstanceRenderer();
 
         final String properties = definition.getProperties().stream()
                 .map(p -> "\t" + p.getName() + ": " + instanceRenderer.renderTypeInstance(p.getType()) + ";")
@@ -72,7 +72,7 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
         if (superTypes.isEmpty()) {
             return "";
         }
-        final TypeInstanceRenderer instanceRenderer = context.getInstanceRenderer();
+        final TypeInstanceEmitter instanceRenderer = context.getInstanceRenderer();
         return " extends " + superTypes.stream()
                 .map(instanceRenderer::renderTypeInstance)
                 .collect(Collectors.joining(delimiter));
@@ -87,7 +87,7 @@ public class InterfaceTypeRenderer extends BaseTypeRenderer {
             .flatMap(gp -> gp.getSuperTypes().stream())
             .forEach(i -> RenderUtils.visitTypeInstance(usedTypes, i));
 
-        RenderUtils.<TypeDefinition>renderImports(usedTypes, writer, (d) -> context.getStorageStrategy().getRelativeFileName(definition, d));
+        RenderUtils.<TypeDefinition>renderImports(usedTypes, writer, (d) -> context.getNamingStrategy().getRelativeFileName(definition, d));
     }
 
 }

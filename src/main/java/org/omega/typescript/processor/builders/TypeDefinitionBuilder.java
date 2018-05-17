@@ -1,12 +1,12 @@
 package org.omega.typescript.processor.builders;
 
 import org.omega.typescript.api.TypeScriptName;
-import org.omega.typescript.processor.ProcessingContext;
 import org.omega.typescript.processor.builders.properties.PropertyDefinitionBuilder;
 import org.omega.typescript.processor.model.EnumConstant;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeInstanceDefinition;
 import org.omega.typescript.processor.model.TypeKind;
+import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.StringUtils;
 import org.omega.typescript.processor.utils.TypeUtils;
 
@@ -29,8 +29,6 @@ public class TypeDefinitionBuilder {
 
     private final PropertyDefinitionBuilder propertyDefinitionBuilder;
 
-    private final TypeContainerBuilder typeContainerBuilder;
-
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -39,7 +37,6 @@ public class TypeDefinitionBuilder {
     public TypeDefinitionBuilder(final ProcessingContext context) {
         this.context = context;
         this.propertyDefinitionBuilder = new PropertyDefinitionBuilder(context);
-        this.typeContainerBuilder = new TypeContainerBuilder(context);
     }
 
     public TypeDefinition buildClassDefinition(final TypeElement type) {
@@ -66,7 +63,7 @@ public class TypeDefinitionBuilder {
         } else if (typeDefinition.getTypeKind() == TypeKind.ENUM) {
             initializeEnum(typeDefinition, typeElement);
         }
-        typeDefinition.setContainer(typeContainerBuilder.buildContainer(typeElement));
+        typeDefinition.setContainer(context.getTypeOracle().buildContainer(typeElement));
     }
 
     private void initializeEnum(TypeDefinition typeDefinition, TypeElement typeElement) {

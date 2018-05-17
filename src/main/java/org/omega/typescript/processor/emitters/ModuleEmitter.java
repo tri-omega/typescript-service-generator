@@ -1,4 +1,4 @@
-package org.omega.typescript.processor.rendering;
+package org.omega.typescript.processor.emitters;
 
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.utils.StringUtils;
@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 /**
  * Created by kibork on 5/8/2018.
  */
-public class ModuleRenderer {
+public class ModuleEmitter {
 
     // ---------------- Fields & Constants --------------
 
-    private final RenderingContext context;
+    private final EmitContext context;
 
     private final String defaultModuleName = "api";
 
@@ -25,7 +25,7 @@ public class ModuleRenderer {
 
     // ------------------ Logic      --------------------
 
-    public ModuleRenderer(final RenderingContext context) {
+    public ModuleEmitter(final EmitContext context) {
         this.context = context;
     }
 
@@ -40,10 +40,8 @@ public class ModuleRenderer {
         if (!StringUtils.hasText(moduleName)) {
             moduleName = defaultModuleName;
         }
-        if (!moduleName.endsWith(".module.ts")) {
-            moduleName += ".module.ts";
-        }
-        try (PrintWriter writer = context.getStorageStrategy().createWriter(moduleName)) {
+
+        try (PrintWriter writer = context.getStorageStrategy().createWriter(context.getNamingStrategy().getFullModuleName(moduleName))) {
             writer.println("import {NgModule} from '@angular/core';\n");
 
             final List<Endpoint> endpointList = endpoints.stream()
@@ -52,7 +50,7 @@ public class ModuleRenderer {
 
             if (!endpointList.isEmpty()) {
                 endpointList.forEach(endpoint ->
-                        writer.printf("import {%s} from '%s';\n", endpoint.getControllerName(), context.getStorageStrategy().getFileName(endpoint))
+                        writer.printf("import {%s} from '%s';\n", endpoint.getControllerName(), context.getNamingStrategy().getIncludeFileName(endpoint))
                 );
                 writer.println();
             }

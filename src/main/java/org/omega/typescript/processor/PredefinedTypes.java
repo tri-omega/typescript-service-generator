@@ -2,6 +2,7 @@ package org.omega.typescript.processor;
 
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
+import org.omega.typescript.processor.model.TypeOracle;
 import org.omega.typescript.processor.utils.TypeUtils;
 
 import java.math.BigDecimal;
