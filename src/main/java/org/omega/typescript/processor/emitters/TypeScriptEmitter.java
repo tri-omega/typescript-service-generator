@@ -91,7 +91,7 @@ public class TypeScriptEmitter implements Emitter {
 
     @Override
     public synchronized void renderEndpoints(final EndpointContainer endpointContainer) {
-        final String serviceIncludeFileName = context.getNamingStrategy().getFullFileName("std/service-api.ts");
+        final String serviceIncludeFileName = context.getNamingStrategy().getFullFileName("tsg-std/service-api.ts");
         IOUtils.copyResource("/ts/service-api.ts", context.getStorageStrategy().getFile(serviceIncludeFileName));
 
         endpointContainer.getEndpointMap()
