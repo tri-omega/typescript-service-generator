@@ -3,6 +3,7 @@ package org.omega.typescript.processor.emitters;
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.utils.RenderUtils;
+import org.omega.typescript.processor.utils.StringUtils;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -53,8 +54,7 @@ public class EndpointRenderer {
         //Render implicit imports
         writer.println(
                 Stream.of(
-                        "import {Injectable} from '@angular/core';",
-                        "import {Observable} from 'rxjs/Observable';",
+                        context.getGenConfig().getAdditionalServiceIncludes(),
                         String.format("import {%s} from '%s';",
                                 context.getGenConfig().getDefaultHttpClassName(),
                                 context.getGenConfig().getDefaultHttpServiceInclude()),
@@ -62,7 +62,9 @@ public class EndpointRenderer {
                                 context.getNamingStrategy().getRelativeFileName(endpoint, "std/service-api")
                         )
 
-                ).collect(Collectors.joining("\n"))
+                ).map(String::trim)
+                .filter(StringUtils::hasText)
+                .collect(Collectors.joining("\n"))
         );
         writer.println();
     }

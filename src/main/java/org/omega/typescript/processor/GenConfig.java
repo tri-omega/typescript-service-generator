@@ -32,6 +32,8 @@ public class GenConfig {
 
     private String defaultHttpServiceInclude;
 
+    private String additionalServiceIncludes;
+
     private Map<String, String> pathOverrides = new HashMap<>();
 
     // ------------------ Properties --------------------
@@ -86,6 +88,8 @@ public class GenConfig {
             outputFolder = StringUtils.endWith(value, "/");
         } else if ("generated-suffix".equalsIgnoreCase(propertyName)) {
             generatedFilesSuffix = value;
+        } else if ("service-includes".equalsIgnoreCase(propertyName)) {
+            additionalServiceIncludes = value;
         } else {
             context.error(String.format("Unknown tsg property %s with value %s, tsg is a reserved prefix", propertyName, value));
         }

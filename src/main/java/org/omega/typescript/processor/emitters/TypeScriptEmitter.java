@@ -55,14 +55,19 @@ public class TypeScriptEmitter implements Emitter {
 
     private GenConfig loadConfig(ProcessingContext execContext) {
         final GenConfig genConfig = new GenConfig(execContext);
-        try (InputStream config = getClass().getResourceAsStream("/tsg-config.properties")) {
+        tryLoad(execContext, genConfig, "/default-tsg-config.properties");
+        tryLoad(execContext, genConfig, "/tsg-config.properties");
+        return genConfig;
+    }
+
+    private void tryLoad(ProcessingContext execContext, GenConfig genConfig, String propName) {
+        try (InputStream config = getClass().getResourceAsStream(propName)) {
             if (config != null) {
                 genConfig.load(config);
             }
         } catch (Exception ex) {
             execContext.warning("Type Script Generator config file 'tsg-config.properties' not found");
         }
-        return genConfig;
     }
 
     private void addDefinitionRenderer(TypeDefinitionEmitter renderer) {
