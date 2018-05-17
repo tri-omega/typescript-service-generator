@@ -28,7 +28,7 @@ public class GenConfig {
 
     private String defaultModuleName = "service-api";
 
-    private String defaultHttpServiceName = "";
+    private String defaultHttpClassName = "";
 
     private String defaultHttpServiceInclude;
 
@@ -40,8 +40,8 @@ public class GenConfig {
         return defaultModuleName;
     }
 
-    public String getDefaultHttpServiceName() {
-        return defaultHttpServiceName;
+    public String getDefaultHttpClassName() {
+        return defaultHttpClassName;
     }
 
     public String getDefaultHttpServiceInclude() {
@@ -78,8 +78,8 @@ public class GenConfig {
     private void readTsgProperty(final String propertyName, final String value) {
         if ("default-module-name".equalsIgnoreCase(propertyName)) {
             defaultModuleName = value;
-        } else if ("http-service".equalsIgnoreCase(propertyName)) {
-            defaultHttpServiceName = value;
+        } else if ("http-service-class".equalsIgnoreCase(propertyName)) {
+            defaultHttpClassName = value;
         } else if ("http-service-include".equalsIgnoreCase(propertyName)) {
             defaultHttpServiceInclude = value;
         } else if ("output-folder".equalsIgnoreCase(propertyName)) {

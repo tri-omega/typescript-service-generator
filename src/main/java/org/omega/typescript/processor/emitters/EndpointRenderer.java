@@ -55,6 +55,9 @@ public class EndpointRenderer {
                 Stream.of(
                         "import {Injectable} from '@angular/core';",
                         "import {Observable} from 'rxjs/Observable';",
+                        String.format("import {%s} from '%s';",
+                                context.getGenConfig().getDefaultHttpClassName(),
+                                context.getGenConfig().getDefaultHttpServiceInclude()),
                         String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
                                 context.getNamingStrategy().getRelativeFileName(endpoint, "std/service-api")
                         )
@@ -68,6 +71,7 @@ public class EndpointRenderer {
         writer.println("@Injectable()");
         writer.printf("export class %s {\n\n", endpoint.getControllerName());
 
+        writer.printf("\tconstructor(private httpService:%s) { }\n\n", context.getGenConfig().getDefaultHttpClassName());
         renderDefaultMapping(endpoint, writer);
 
         endpoint.getEndpointMethods().forEach(method -> methodEmitter.renderMethod(method, writer));
@@ -75,7 +79,7 @@ public class EndpointRenderer {
         writer.println("}\n");
     }
 
-    private void renderDefaultMapping(Endpoint endpoint, PrintWriter writer) {
+    private void renderDefaultMapping(final Endpoint endpoint, final PrintWriter writer) {
         writer.print("\tdefaultRequestMapping:HttpRequestMapping = ");
         if (endpoint.getMappingDefinition().isPresent()) {
             methodEmitter.renderMapping(writer, endpoint.getMappingDefinition().get()).println(";");
