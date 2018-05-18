@@ -1,5 +1,9 @@
 package org.omega.typescript.processor.utils;
 
+import org.omega.typescript.processor.services.ProcessingContext;
+
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 import java.io.*;
 
 /**
@@ -30,6 +34,15 @@ public final class IOUtils {
             return true;
         } catch (IOException ex) {
             return false;
+        }
+    }
+
+    public static String readClasspathResource(final String name, final ProcessingContext context) {
+        try {
+            final FileObject fileObject = context.getProcessingEnv().getFiler().getResource(StandardLocation.CLASS_PATH, "", name);
+            return fileObject.getCharContent(true).toString();
+        } catch (IOException ex) {
+            return "Error: " + StringUtils.exceptionToString(ex);
         }
     }
 }

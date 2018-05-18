@@ -1,6 +1,7 @@
 package org.omega.typescript.processor.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * Created by kibork on 1/22/2018.
  */
 @Data
+@EqualsAndHashCode(exclude = {"superTypes", "properties", "container"})
 public class TypeDefinition {
 
     // ------------------ Constants  --------------------
