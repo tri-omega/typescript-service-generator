@@ -82,22 +82,19 @@ public class TypeOracle {
     }
 
     public Optional<TypeDefinition> getType(final String qualifiedName) {
+        final boolean isExcluded =
+                context.getGenConfig().getExcludedClasses()
+                        .values().stream()
+                        .anyMatch(p -> p.matcher(qualifiedName).matches());
+        if (isExcluded) {
+            return Optional.of(getAny());
+        }
         return Optional.ofNullable(types.get(qualifiedName));
     }
 
     public Optional<TypeDefinition> getType(final TypeElement typeElement) {
         final String className = TypeUtils.getClassName(typeElement);
         return getType(className);
-    }
-
-    /**
-     * Correct usages are not really known, let's keep for now and see if we need it
-     * @param typeElement type element to build instance form
-     * @return new type instance based on the element
-     */
-    @Deprecated
-    public TypeInstanceDefinition buildInstance(final TypeElement typeElement) {
-        return typeInstanceBuilder.buildDefinition(typeElement);
     }
 
     public TypeInstanceDefinition buildInstance(final TypeMirror typeMirror) {

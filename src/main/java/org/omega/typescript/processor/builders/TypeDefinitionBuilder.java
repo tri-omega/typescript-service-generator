@@ -88,7 +88,10 @@ public class TypeDefinitionBuilder {
         for (final TypeMirror interfaceMirror : interfaces) {
             final QualifiedNameable interfaceElement = (TypeElement) context.getProcessingEnv().getTypeUtils().asElement(interfaceMirror);
             if ((interfaceElement == null) || (!Object.class.getName().equals(interfaceElement.getQualifiedName().toString()))) {
-                typeDefinition.getSuperTypes().add(context.getTypeOracle().buildInstance(interfaceMirror));
+                final TypeInstanceDefinition instance = context.getTypeOracle().buildInstance(interfaceMirror);
+                if (!Object.class.getName().equals(instance.getTypeDefinition().getFullName())) {
+                    typeDefinition.getSuperTypes().add(instance);
+                }
             }
         }
     }

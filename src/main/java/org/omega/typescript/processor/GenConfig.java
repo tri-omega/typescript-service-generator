@@ -15,9 +15,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by kibork on 5/16/2018.
@@ -56,6 +55,8 @@ public class GenConfig {
     private String timeType;
 
     private Map<String, String> pathOverrides = new HashMap<>();
+
+    private Map<String, Pattern> excludedClasses = new HashMap<>();
 
     // ------------------ Properties --------------------
 
@@ -99,7 +100,7 @@ public class GenConfig {
             properties.load(configData);
             properties.forEach((key, value) -> {
                 if (key.toString().startsWith(INTERNAL_PROP_PREFIX)) {
-                    readTsgProperty(key.toString().substring(INTERNAL_PROP_PREFIX.length()), value.toString());
+                    readTsgProperty(key.toString().substring(INTERNAL_PROP_PREFIX.length()).trim(), value.toString().trim());
                 } else {
                     pathOverrides.put(key.toString().trim(), value.toString().trim());
                 }
@@ -135,11 +136,25 @@ public class GenConfig {
             localDateTimeType = value;
         } else if ("java-time.time-type".equals(propertyName)) {
             timeType = value;
+        } else if (propertyName.startsWith("exclude-classes-regex")) {
+            addExcludeFilter(value, propertyName.substring("exclude-classes-regex".length()));
         } else {
             context.error(String.format("Unknown tsg property %s with value %s, tsg is a reserved prefix", propertyName, value));
         }
     }
 
+    private void addExcludeFilter(final String value, String excludeName) {
+        if (!StringUtils.hasText(excludeName)) {
+            excludeName = UUID.randomUUID().toString();
+        } else if (excludeName.startsWith(".")) {
+            excludeName = excludeName.substring(1);
+        }
+        if (!StringUtils.hasText(value)) {
+            excludedClasses.remove(excludeName);
+        } else {
+            excludedClasses.putIfAbsent(excludeName, Pattern.compile(value));
+        }
+    }
 
     private void loadDefaultConfig() {
         tryLoadInternal("default-tsg-config.properties");
