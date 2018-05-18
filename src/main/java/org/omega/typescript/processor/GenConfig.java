@@ -34,7 +34,9 @@ public class GenConfig {
 
     private String outputFolder = "sys-gen/";
 
-    private String stdFileName = "sys-std";
+    private String stdApiFileName = "sys-std";
+
+    private String requestManagerFileName = "sys-std";
 
     private String generatedFilesSuffix = ".generated";
 
@@ -126,8 +128,10 @@ public class GenConfig {
             generatedFilesSuffix = value;
         } else if ("service-includes".equalsIgnoreCase(propertyName)) {
             additionalServiceIncludes = value;
-        } else if ("std-file-name".equalsIgnoreCase(propertyName)) {
-            stdFileName = value;
+        } else if ("std-api-file-name".equalsIgnoreCase(propertyName)) {
+            stdApiFileName = value;
+        } else if ("request-manager-file-name".equalsIgnoreCase(propertyName)) {
+            requestManagerFileName = value;
         } else if ("enable-java-time-integration".equalsIgnoreCase(propertyName)) {
             enableJavaTimeIntegration = Boolean.valueOf(value);
         } else if ("java-time.zoned-date-time-type".equals(propertyName)) {

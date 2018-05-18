@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by kibork on 5/2/2018.
  */
-public class EndpointRenderer {
+public class EndpointEmitter {
 
     // ------------------ Constants  --------------------
 
@@ -28,7 +28,7 @@ public class EndpointRenderer {
 
     // ------------------ Logic      --------------------
 
-    public EndpointRenderer(final EmitContext context) {
+    public EndpointEmitter(final EmitContext context) {
         this.context = context;
         this.methodEmitter = new MethodEmitter(context);
     }
@@ -57,7 +57,7 @@ public class EndpointRenderer {
                         context.getGenConfig().getAdditionalServiceIncludes(),
                         String.format("import {%s} from '%s';",
                                 context.getGenConfig().getDefaultHttpClassName(),
-                                context.getGenConfig().getDefaultHttpServiceInclude()),
+                                getHttpServiceInclude(endpoint)),
                         String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
                                 context.getNamingStrategy().getRelativeFileName(endpoint, getIncludeFileName())
                         )
@@ -69,8 +69,16 @@ public class EndpointRenderer {
         writer.println();
     }
 
+    private String getHttpServiceInclude(final Endpoint endpoint) {
+        final String path = context.getGenConfig().getDefaultHttpServiceInclude();
+        if (path.startsWith("tsg-std")) {
+            return context.getNamingStrategy().getRelativeFileName(endpoint, path);
+        }
+        return path;
+    }
+
     private String getIncludeFileName() {
-        final String fileName = context.getGenConfig().getStdFileName();
+        final String fileName = context.getGenConfig().getStdApiFileName();
         if (fileName.endsWith(".ts")) {
             return fileName.substring(0, fileName.length() - ".ts".length());
         }

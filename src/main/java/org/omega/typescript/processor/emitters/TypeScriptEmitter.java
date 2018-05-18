@@ -25,7 +25,7 @@ public class TypeScriptEmitter implements Emitter {
 
     private Map<TypeKind, TypeDefinitionEmitter> definitionRenderers = new HashMap<>();
 
-    private EndpointRenderer endpointRenderer;
+    private EndpointEmitter endpointEmitter;
 
     private ModuleEmitter moduleEmitter;
 
@@ -43,7 +43,7 @@ public class TypeScriptEmitter implements Emitter {
         addDefinitionRenderer(new InterfaceTypeEmitter(context));
         addDefinitionRenderer(new EnumTypeEmitter(context));
 
-        endpointRenderer = new EndpointRenderer(context);
+        endpointEmitter = new EndpointEmitter(context);
         moduleEmitter = new ModuleEmitter(context);
     }
 
@@ -68,12 +68,14 @@ public class TypeScriptEmitter implements Emitter {
 
     @Override
     public synchronized void renderEndpoints(final EndpointContainer endpointContainer) {
-        final String serviceIncludeFileName = context.getNamingStrategy().getFullFileName(context.getGenConfig().getStdFileName());
+        final String serviceIncludeFileName = context.getNamingStrategy().getFullFileName(context.getGenConfig().getStdApiFileName());
+        final String requestManagerFileName = context.getNamingStrategy().getFullFileName(context.getGenConfig().getRequestManagerFileName());
         IOUtils.copyResource("/ts/service-api.ts", context.getStorageStrategy().getFile(serviceIncludeFileName));
+        IOUtils.copyResource("/ts/ServiceRequestManager.ts", context.getStorageStrategy().getFile(requestManagerFileName));
 
         endpointContainer.getEndpointMap()
                 .values()
-                .forEach(endpoint -> endpointRenderer.renderEndpoint(endpoint));
+                .forEach(endpoint -> endpointEmitter.renderEndpoint(endpoint));
 
         moduleEmitter.renderModuleDefinition(endpointContainer.getEndpointMap().values());
     }
