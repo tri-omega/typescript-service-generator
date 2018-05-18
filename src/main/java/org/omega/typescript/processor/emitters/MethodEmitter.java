@@ -84,9 +84,14 @@ public class MethodEmitter {
                     ).collect(Collectors.joining(", "));
     }
 
-    public PrintWriter renderMapping(PrintWriter writer, MappingDefinition mapping) {
+    public PrintWriter renderMapping(final PrintWriter writer, final MappingDefinition mapping) {
+        final Optional<MappingDefinition> mappingDefinitionOptional = Optional.ofNullable(mapping);
         writer.printf("{urlTemplate: '%s', method: RequestMethod.%s}",
-                StringUtils.escapeString(mapping.getUrlTemplate(), "'"), mapping.getRequestMethod().name());
+                StringUtils.escapeString(
+                        mappingDefinitionOptional.map(MappingDefinition::getUrlTemplate).orElse(""), "'"),
+                        mappingDefinitionOptional.map(MappingDefinition::getRequestMethod)
+                            .map(Enum::name).orElse("null")
+        );
         return writer;
     }
 

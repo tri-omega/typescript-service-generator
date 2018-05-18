@@ -3,9 +3,18 @@ package org.omega.typescript.processor;
 import lombok.Getter;
 import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.StringUtils;
+import org.omega.typescript.processor.utils.TreePath;
+import org.omega.typescript.processor.utils.Trees;
+import org.omega.typescript.processor.utils.TypeUtils;
 
+import javax.lang.model.element.TypeElement;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -15,6 +24,7 @@ import java.util.Properties;
  */
 @Getter
 public class GenConfig {
+    public static final String CONFIG_FILE = "tsg-config.properties";
 
     // ---------------- Fields & Constants --------------
 
@@ -22,19 +32,19 @@ public class GenConfig {
 
     public static final String INTERNAL_PROP_PREFIX = "tsg.";
 
-    private String outputFolder = "get/";
+    private String outputFolder = "sys-gen/";
 
-    private String stdFileName;
+    private String stdFileName = "sys-std";
 
     private String generatedFilesSuffix = ".generated";
 
     private String defaultModuleName = "service-api";
 
-    private String defaultHttpClassName = "";
+    private String defaultHttpClassName = "#any#";
 
-    private String defaultHttpServiceInclude;
+    private String defaultHttpServiceInclude = "#invalid#";
 
-    private String additionalServiceIncludes;
+    private String additionalServiceIncludes = "#invalid#";
 
     private Map<String, String> pathOverrides = new HashMap<>();
 
@@ -58,6 +68,20 @@ public class GenConfig {
 
     public GenConfig(final ProcessingContext context) {
         this.context = context;
+        loadDefaultConfig();
+    }
+
+    public boolean load(final File file) {
+        if ((!file.exists()) || (!file.isFile()) || (!file.canRead())) {
+            return false;
+        }
+        try (InputStream stream = new FileInputStream(file)) {
+            load(stream);
+            return true;
+        } catch (Exception ex) {
+            context.warning("Failed to read file " + file + "\n" + StringUtils.exceptionToString(ex));
+            return false;
+        }
     }
 
     public boolean load(final InputStream configData) {
@@ -99,4 +123,69 @@ public class GenConfig {
         }
     }
 
+
+    private void loadDefaultConfig() {
+        tryLoadInternal("default-tsg-config.properties");
+        tryLoadLocal("/" + CONFIG_FILE);
+    }
+
+    private void tryLoadInternal(final String fileName) {
+        tryLoadResource(fileName, StandardLocation.CLASS_PATH);
+    }
+
+    private void tryLoadLocal(final String resourceName) {
+        try (InputStream config = getClass().getResourceAsStream(resourceName)) {
+            if (config != null) {
+                context.debug("Found resource " + resourceName + " at local classpath. Likely local build");
+            }
+            if (config != null) {
+                load(config);
+            }
+        } catch (Exception ex) {
+            //
+        }
+    }
+
+    private void tryLoadResource(final String propName, final StandardLocation location) {
+        try (InputStream config = context.getProcessingEnv().getFiler().getResource(location, "", propName).openInputStream()) {
+            if (config != null) {
+                load(config);
+            }
+        } catch (Exception ex) {
+            context.warning("Type Script Generator config file '" + propName + "' not found at " + location);
+        }
+    }
+
+
+    public void tryLoadConfig(final TypeElement type) {
+        try {
+            final Trees trees = Trees.fromEnv(context.getProcessingEnv());
+            final TreePath path = trees.getPath(type);
+            final JavaFileObject sourceFile = path.getSourceFile();
+            final URI uri = sourceFile.toUri();
+            final String scheme = uri.getScheme();
+
+            if ("file".equals(scheme)) {
+                final File file = new File(uri);
+                if (!file.exists()) {
+                    context.error("File " + file + " doesn't exists");
+                }
+                File dir = file.getParentFile();
+                while (dir.exists()) {
+                    final File configFile = new File(dir, CONFIG_FILE);
+                    if (configFile.exists()) {
+                        context.debug("Found Type Script Generator config at " + configFile);
+                        load(configFile);
+                        break;
+                    }
+                    dir = dir.getParentFile();
+                }
+            } else {
+                context.warning("Annotated class " + TypeUtils.getClassName(type) +
+                        " is in exotic location. JavaFileObject kind: " + sourceFile.getKind() + ", name = " + sourceFile.getName() + ", uri = " + uri + ", scheme '" + scheme + "'");
+            }
+        } catch (Exception e) {
+            context.debug("Unable to load javac compilation unit info. Likely local build.\n" + StringUtils.exceptionToString(e));
+        }
+    }
 }

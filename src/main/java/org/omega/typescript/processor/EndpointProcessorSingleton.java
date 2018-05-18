@@ -12,6 +12,8 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,24 +70,35 @@ public final class EndpointProcessorSingleton {
         }
 
         final ProcessingContext context = new ProcessingContext(roundEnv, processingEnv, oracle, endpointContainer);
+        try {
 
-        final AtomicBoolean hasNew = new AtomicBoolean(false);
-        endpoints.forEach(type -> {
-            final String className = type.getQualifiedName().toString().intern();
-            synchronized (className) {
-                if (!endpointContainer.hasEndpoint(className)) {
-                    tryAcceptClass(type, context);
-                    hasNew.set(true);
+            final AtomicBoolean hasNew = new AtomicBoolean(false);
+            endpoints.forEach(type -> {
+                final String className = type.getQualifiedName().toString().intern();
+                synchronized (className) {
+                    if (!endpointContainer.hasEndpoint(className)) {
+                        if (!hasNew.get()) {
+                            context.getGenConfig().tryLoadConfig(type);
+                        }
+                        tryAcceptClass(type, context);
+                        hasNew.set(true);
+                    }
                 }
+            });
+
+            if (hasNew.get()) {
+                emitter.initContext(context);
+                emitter.renderTypes(oracle);
+                emitter.renderEndpoints(endpointContainer);
             }
-        });
-
-        if (hasNew.get()) {
-            emitter.initContext(context);
-            emitter.renderTypes(oracle);
-            emitter.renderEndpoints(endpointContainer);
+        } catch (Exception ex) {
+            final StringWriter out = new StringWriter();
+            try (PrintWriter exWriter = new PrintWriter(out)) {
+                ex.printStackTrace(exWriter);
+            }
+            context.error("Exception while processing Type Script Generator annotations:" + ex.getMessage()
+                    + "\n" + out.toString());
         }
-
     }
 
     private List<TypeElement> collectRoundEndpoints(RoundEnvironment roundEnv) {

@@ -1,5 +1,6 @@
 package org.omega.typescript.processor.services;
 
+import org.omega.typescript.processor.GenConfig;
 import org.omega.typescript.processor.model.EndpointContainer;
 import org.omega.typescript.processor.model.TypeOracle;
 import org.omega.typescript.processor.utils.LogUtil;
@@ -24,6 +25,9 @@ public class ProcessingContext {
 
     private final EndpointContainer endpointContainer;
 
+    private final GenConfig genConfig;
+
+
     // ------------------ Properties --------------------
 
     public RoundEnvironment getRoundEnv() {
@@ -42,6 +46,10 @@ public class ProcessingContext {
         return endpointContainer;
     }
 
+    public GenConfig getGenConfig() {
+        return genConfig;
+    }
+
     // ------------------ Logic      --------------------
 
     public ProcessingContext(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv, TypeOracle typeOracle, EndpointContainer endpointContainer) {
@@ -49,6 +57,7 @@ public class ProcessingContext {
         this.processingEnv = processingEnv;
         this.typeOracle = typeOracle;
         this.endpointContainer = endpointContainer;
+        this.genConfig = new GenConfig(this);
     }
 
     public void debug(final String msg) {

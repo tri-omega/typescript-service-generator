@@ -38,7 +38,7 @@ public class EndpointRenderer {
             renderImports(endpoint, writer);
             renderBody(endpoint, writer);
         } catch (Exception ex) {
-            throw new RuntimeException("Failed to render endpoint for type " + endpoint.getControllerClassName(), ex);
+            throw new RuntimeException("Failed to render endpoint for type " + endpoint.getControllerClassName() + ":" + ex.getClass() + ">" + ex.getMessage(), ex);
         }
     }
 

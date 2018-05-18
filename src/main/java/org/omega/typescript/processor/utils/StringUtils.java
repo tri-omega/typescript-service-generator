@@ -1,5 +1,8 @@
 package org.omega.typescript.processor.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by kibork on 2/12/2018.
  */
@@ -32,5 +35,14 @@ public final class StringUtils {
             return str;
         }
         return str + suffix;
+    }
+
+    public static String exceptionToString(final Throwable th) {
+        final StringWriter out = new StringWriter();
+        out.append(th.getMessage()).append("\n");
+        try (PrintWriter exWriter = new PrintWriter(out)) {
+            th.printStackTrace(exWriter);
+        }
+        return out.toString();
     }
 }

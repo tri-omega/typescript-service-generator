@@ -36,9 +36,9 @@ public class GenConfigBasedNamingStrategy implements FileNamingStrategy {
     // ------------------ Logic      --------------------
 
 
-    public GenConfigBasedNamingStrategy(final ProcessingContext execContext, final GenConfig genConfig) {
+    public GenConfigBasedNamingStrategy(final ProcessingContext execContext) {
         this.context = execContext;
-        this.genConfig = genConfig;
+        this.genConfig = execContext.getGenConfig();
         init();
     }
 

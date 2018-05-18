@@ -33,12 +33,12 @@ public class EmitContext {
     // ------------------ Logic      --------------------
 
 
-    public EmitContext(final ProcessingContext processingContext, final FileNamingStrategy namingStrategy, final StorageStrategy storageStrategy, final GenConfig genConfig) {
+    public EmitContext(final ProcessingContext processingContext, final FileNamingStrategy namingStrategy, final StorageStrategy storageStrategy) {
         this.processingContext = processingContext;
         this.namingStrategy = namingStrategy;
         this.storageStrategy = storageStrategy;
         this.instanceRenderer = new TypeInstanceEmitter(this);
-        this.genConfig = genConfig;
+        this.genConfig = processingContext.getGenConfig();
     }
 
     public void debug(final String msg) {
