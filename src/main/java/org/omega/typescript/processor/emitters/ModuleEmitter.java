@@ -19,8 +19,6 @@ public class ModuleEmitter {
 
     private final EmitContext context;
 
-    private final String defaultModuleName = "api";
-
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -38,7 +36,7 @@ public class ModuleEmitter {
 
     private void renderModule(final Collection<Endpoint> endpoints, String moduleName) {
         if (!StringUtils.hasText(moduleName)) {
-            moduleName = defaultModuleName;
+            moduleName = context.getGenConfig().getDefaultModuleName();
         }
 
         try (PrintWriter writer = context.getStorageStrategy().createWriter(context.getNamingStrategy().getFullModuleName(moduleName))) {

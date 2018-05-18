@@ -48,7 +48,7 @@ public class MethodEmitter {
         } else {
             writer.println("\t\tconst params: MethodParamMapping[] = [];");
         }
-        writer.printf("\t\treturn httpService.execute(this.defaultRequestMapping, mapping, params);\n");
+        writer.printf("\t\treturn this.httpService.execute(this.defaultRequestMapping, mapping, params);\n");
         writer.println("\t}\n");
     }
 
@@ -86,11 +86,11 @@ public class MethodEmitter {
 
     public PrintWriter renderMapping(final PrintWriter writer, final MappingDefinition mapping) {
         final Optional<MappingDefinition> mappingDefinitionOptional = Optional.ofNullable(mapping);
-        writer.printf("{urlTemplate: '%s', method: RequestMethod.%s}",
+        writer.printf("{urlTemplate: '%s', method: %s}",
                 StringUtils.escapeString(
                         mappingDefinitionOptional.map(MappingDefinition::getUrlTemplate).orElse(""), "'"),
                         mappingDefinitionOptional.map(MappingDefinition::getRequestMethod)
-                            .map(Enum::name).orElse("null")
+                            .map(v -> "RequestMethod." + v.name()).orElse("null")
         );
         return writer;
     }

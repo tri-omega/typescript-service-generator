@@ -60,7 +60,8 @@ public class GenConfigBasedNamingStrategy implements FileNamingStrategy {
         if (override.isPresent()) {
             targetDir = override.get().getOverride() + targetDir.substring(override.get().getPath().length() - 1);
         }
-        return StringUtils.endWith(genConfig.getOutputFolder(), "/") + StringUtils.endWith(targetDir, "/");
+        final String result = StringUtils.endWith(genConfig.getOutputFolder(), "/") + StringUtils.endWith(targetDir, "/");
+        return result.replace("//", "/");
     }
 
     private String getFullName(final String containerPackage, final String fileName) {

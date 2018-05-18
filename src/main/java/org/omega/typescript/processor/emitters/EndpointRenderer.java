@@ -59,7 +59,7 @@ public class EndpointRenderer {
                                 context.getGenConfig().getDefaultHttpClassName(),
                                 context.getGenConfig().getDefaultHttpServiceInclude()),
                         String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
-                                context.getNamingStrategy().getRelativeFileName(endpoint, context.getGenConfig().getStdFileName())
+                                context.getNamingStrategy().getRelativeFileName(endpoint, getIncludeFileName())
                         )
 
                 ).map(String::trim)
@@ -67,6 +67,14 @@ public class EndpointRenderer {
                 .collect(Collectors.joining("\n"))
         );
         writer.println();
+    }
+
+    private String getIncludeFileName() {
+        final String fileName = context.getGenConfig().getStdFileName();
+        if (fileName.endsWith(".ts")) {
+            return fileName.substring(0, fileName.length() - ".ts".length());
+        }
+        return fileName;
     }
 
     private void renderBody(final Endpoint endpoint, final PrintWriter writer) {

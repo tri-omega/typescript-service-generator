@@ -41,17 +41,22 @@ public class TypeOracle {
 
     private TypeElement mapElement;
 
+    private boolean initializedPredefinedTypes = false;
+
     // ------------------ Properties --------------------
 
     public Collection<TypeDefinition> getKnownTypes() {
         return types.values();
     }
 
+    public ProcessingContext getContext() {
+        return context;
+    }
+
     // ------------------ Logic      --------------------
 
 
     public TypeOracle() {
-        PredefinedTypes.registerTypes(this);
     }
 
     public void initContext(final ProcessingContext context) {
@@ -59,6 +64,11 @@ public class TypeOracle {
         this.typeDefinitionBuilder = new TypeDefinitionBuilder(context);
         this.typeInstanceBuilder = new TypeInstanceBuilder(context);
         this.typeContainerBuilder = new TypeContainerBuilder(context);
+
+        if (!initializedPredefinedTypes) {
+            PredefinedTypes.registerTypes(this);
+            initializedPredefinedTypes = true;
+        }
 
         this.collectionType = context.getProcessingEnv().getTypeUtils().erasure(
                 context.getProcessingEnv().getElementUtils().getTypeElement(Collection.class.getName())
@@ -96,7 +106,7 @@ public class TypeOracle {
 
     public void clear() {
         types.clear();
-        PredefinedTypes.registerTypes(this);
+        initializedPredefinedTypes = false;
     }
 
     public void addType(final TypeDefinition typeDefinition) {

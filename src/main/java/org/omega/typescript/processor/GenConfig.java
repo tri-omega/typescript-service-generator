@@ -24,9 +24,10 @@ import java.util.Properties;
  */
 @Getter
 public class GenConfig {
-    public static final String CONFIG_FILE = "tsg-config.properties";
 
     // ---------------- Fields & Constants --------------
+
+    public static final String CONFIG_FILE = "tsg-config.properties";
 
     private final ProcessingContext context;
 
@@ -45,6 +46,14 @@ public class GenConfig {
     private String defaultHttpServiceInclude = "#invalid#";
 
     private String additionalServiceIncludes = "#invalid#";
+
+    private boolean enableJavaTimeIntegration = true;
+
+    private String zonedDateTimeType;
+
+    private String localDateTimeType;
+
+    private String timeType;
 
     private Map<String, String> pathOverrides = new HashMap<>();
 
@@ -118,6 +127,14 @@ public class GenConfig {
             additionalServiceIncludes = value;
         } else if ("std-file-name".equalsIgnoreCase(propertyName)) {
             stdFileName = value;
+        } else if ("enable-java-time-integration".equalsIgnoreCase(propertyName)) {
+            enableJavaTimeIntegration = Boolean.valueOf(value);
+        } else if ("java-time.zoned-date-time-type".equals(propertyName)) {
+            zonedDateTimeType = value;
+        } else if ("java-time.local-date-time-type".equals(propertyName)) {
+            localDateTimeType = value;
+        } else if ("java-time.time-type".equals(propertyName)) {
+            timeType = value;
         } else {
             context.error(String.format("Unknown tsg property %s with value %s, tsg is a reserved prefix", propertyName, value));
         }
