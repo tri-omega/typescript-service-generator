@@ -155,6 +155,7 @@ public class GenConfigBasedNamingStrategy implements FileNamingStrategy {
 
     @Override
     public String getIncludeFileName(final Endpoint endpoint) {
-        return "./" + getEndpointBaseName(endpoint).substring(genConfig.getOutputFolder().length());
+        final String endpointPath = getEndpointBaseName(endpoint).substring(genConfig.getOutputFolder().length());
+        return "." + (endpointPath.startsWith("/") ? "" : "/") + endpointPath;
     }
 }
