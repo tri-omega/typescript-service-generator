@@ -56,6 +56,8 @@ public class GenConfig {
 
     private String timeType;
 
+    private String dateType;
+
     private Map<String, String> pathOverrides = new HashMap<>();
 
     private Map<String, Pattern> excludedClasses = new HashMap<>();
@@ -140,6 +142,8 @@ public class GenConfig {
             localDateTimeType = value;
         } else if ("java-time.time-type".equals(propertyName)) {
             timeType = value;
+        } else if ("java-time.date-type".equals(propertyName)) {
+            dateType = value;
         } else if (propertyName.startsWith("exclude-classes-regex")) {
             addExcludeFilter(value, propertyName.substring("exclude-classes-regex".length()));
         } else {

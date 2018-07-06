@@ -7,6 +7,7 @@ import org.omega.typescript.processor.utils.TypeUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
@@ -67,6 +68,7 @@ public class PredefinedTypes {
             addPrimitive(typeOracle, ZonedDateTime.class, config.getZonedDateTimeType());
             addPrimitive(typeOracle, LocalDateTime.class, config.getLocalDateTimeType());
             addPrimitive(typeOracle, LocalTime.class, config.getTimeType());
+            addPrimitive(typeOracle, LocalDate.class, config.getDateType());
         }
     }
 
