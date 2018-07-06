@@ -33,7 +33,7 @@ export class ServiceRequestManager {
       throw error("Unable to handle multiple body params. Received " + bodyParams.length + " body arguments");
     }
 
-    let body: any = bodyParams.length > 0 ? bodyParams[0] : null;
+    let body: any = bodyParams.length > 0 ? bodyParams[0] : undefined;
     return body;
   }
 
