@@ -35,21 +35,20 @@ export class ServiceRequestManager {
       throw error("Unable to handle multiple body params. Received " + bodyParams.length + " body arguments");
     }
 
-    let body: any = bodyParams.length > 0 ? bodyParams[0] : undefined;
+    let body: any = bodyParams.length > 0 ? bodyParams[0].value : undefined;
     return body;
   }
 
-    private prepareHttpParams(params: MethodParamMapping[]) {
-        let httpParams: HttpParams = new HttpParams();
-        const requestParams = params.filter(p => p.requestParameterName && (!p.isRequestBody));
-        for (let index:number = 0; index < params.length; ++index) {
-            let param: MethodParamMapping = requestParams[index];
-            if (param.requestParameterName && (!param.isRequestBody)) {
-                httpParams = httpParams.append(param.requestParameterName, param.value);
-            }
+private prepareHttpParams(params: MethodParamMapping[]) {
+    let httpParams: HttpParams = new HttpParams();
+    for (let index:number = 0; index < params.length; ++index) {
+        let param: MethodParamMapping = params[index];
+        if (param.requestParameterName && (!param.isRequestBody)) {
+            httpParams = httpParams.append(param.requestParameterName, param.value);
         }
-        return httpParams;
     }
+    return httpParams;
+}
 
   private concatUrl(baseMapping: string, requestMapping: string, params: MethodParamMapping[]):string {
     let url: string = baseMapping;

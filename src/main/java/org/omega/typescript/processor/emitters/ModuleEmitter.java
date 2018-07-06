@@ -1,5 +1,6 @@
 package org.omega.typescript.processor.emitters;
 
+import org.omega.typescript.processor.GenConfig;
 import org.omega.typescript.processor.model.Endpoint;
 import org.omega.typescript.processor.utils.StringUtils;
 
@@ -36,13 +37,14 @@ public class ModuleEmitter {
     }
 
     private void renderModule(final Collection<Endpoint> endpoints, String moduleName) {
+        final GenConfig config = context.getGenConfig();
         if (!StringUtils.hasText(moduleName)) {
-            moduleName = context.getGenConfig().getDefaultModuleName();
+            moduleName = config.getDefaultModuleName();
         }
 
         try (PrintWriter writer = context.getStorageStrategy().createWriter(context.getNamingStrategy().getFullModuleName(moduleName))) {
             writer.println("import {NgModule} from '@angular/core';\n");
-            writer.printf("import {%s} from \"./%s\";\n", context.getGenConfig().getDefaultHttpClassName(), context.getGenConfig().getDefaultHttpServiceInclude());
+            writer.printf("import {%s} from \"%s\";\n", config.getDefaultHttpClassName(), getHttpServiceInclude());
 
             final List<Endpoint> endpointList = endpoints.stream()
                     .sorted(Comparator.comparing(Endpoint::getControllerName))
@@ -59,7 +61,7 @@ public class ModuleEmitter {
             writer.println("\tproviders: [");
             writer.println(
                     Stream.concat(
-                        Stream.of("\t\t" + context.getGenConfig().getDefaultHttpClassName()),
+                        Stream.of("\t\t" + config.getDefaultHttpClassName()),
                         endpointList.stream()
                             .map(endpoint -> String.format("\t\t%s", endpoint.getControllerName()))
                     )
@@ -73,6 +75,15 @@ public class ModuleEmitter {
             throw new RuntimeException("Failed to render module definition", ex);
         }
     }
+
+    private String getHttpServiceInclude() {
+        final String path = context.getGenConfig().getDefaultHttpServiceInclude();
+        if (path.startsWith("tsg-std")) {
+            return "./" + path;
+        }
+        return path;
+    }
+
 
     public String getModuleClassName(final String moduleName) {
         String className = "";
