@@ -1,8 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {HttpRequestMapping, MethodParamMapping, RequestMethod} from "./api";
+import {HttpRequestMapping, MethodParamMapping} from "./api";
 import {Observable} from "rxjs/internal/Observable";
-import {st} from "@angular/core/src/render3";
 import {error} from "@angular/compiler/src/util";
 
 
@@ -17,11 +16,14 @@ export class ServiceRequestManager {
     const httpParams = this.prepareHttpParams(params);
     let body = this.extractBody(params);
     let method:string = requestMapping.method ? requestMapping.method : defaultMapping.method;
+      return this.request(method, urlTemplate, httpParams, body);
+  }
 
-    return this.httpClient.request<T>(method, urlTemplate, {
-      params: httpParams,
-      body: body
-    });
+  public request<T>(method: string, urlTemplate: string, httpParams, body): Observable<T> {
+      return this.httpClient.request<T>(method, urlTemplate, {
+          params: httpParams,
+          body: body
+      });
   }
 
   private extractBody(params: MethodParamMapping[]) {
@@ -37,12 +39,17 @@ export class ServiceRequestManager {
     return body;
   }
 
-  private prepareHttpParams(params: MethodParamMapping[]) {
-    const httpParams: HttpParams = new HttpParams();
-    const requestParams = params.filter(p => p.requestParameterName && (!p.isRequestBody));
-    requestParams.forEach(p => httpParams.append(p.requestParameterName, p.value));
-    return httpParams;
-  }
+    private prepareHttpParams(params: MethodParamMapping[]) {
+        let httpParams: HttpParams = new HttpParams();
+        const requestParams = params.filter(p => p.requestParameterName && (!p.isRequestBody));
+        for (let index:number = 0; index < params.length; ++index) {
+            let param: MethodParamMapping = requestParams[index];
+            if (param.requestParameterName && (!param.isRequestBody)) {
+                httpParams = httpParams.append(param.requestParameterName, param.value);
+            }
+        }
+        return httpParams;
+    }
 
   private concatUrl(baseMapping: string, requestMapping: string, params: MethodParamMapping[]):string {
     let url: string = baseMapping;
