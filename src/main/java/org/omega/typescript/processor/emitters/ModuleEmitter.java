@@ -67,10 +67,26 @@ public class ModuleEmitter {
             );
             writer.println("\t]");
             writer.println("})");
-            writer.println("export class APIModule { }");
+            writer.printf("export class %s { }\n", getModuleClassName(moduleName));
 
         } catch (Exception ex) {
             throw new RuntimeException("Failed to render module definition", ex);
         }
+    }
+
+    public String getModuleClassName(final String moduleName) {
+        String className = "";
+        boolean capitalize = true;
+        for (int index = 0; index < moduleName.length(); ++index) {
+            char c = moduleName.charAt(index);
+            if (c == '-') {
+                capitalize = true;
+            } else {
+                c = capitalize ? Character.toUpperCase(c) : c;
+                className += c;
+                capitalize = false;
+            }
+        }
+        return className;
     }
 }
