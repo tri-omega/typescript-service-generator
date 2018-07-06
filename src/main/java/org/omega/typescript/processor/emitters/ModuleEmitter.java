@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by kibork on 5/8/2018.
@@ -41,6 +42,7 @@ public class ModuleEmitter {
 
         try (PrintWriter writer = context.getStorageStrategy().createWriter(context.getNamingStrategy().getFullModuleName(moduleName))) {
             writer.println("import {NgModule} from '@angular/core';\n");
+            writer.printf("import {%s} from \"./%s\";\n", context.getGenConfig().getDefaultHttpClassName(), context.getGenConfig().getDefaultHttpServiceInclude());
 
             final List<Endpoint> endpointList = endpoints.stream()
                     .sorted(Comparator.comparing(Endpoint::getControllerName))
@@ -56,8 +58,11 @@ public class ModuleEmitter {
             writer.println("@NgModule({");
             writer.println("\tproviders: [");
             writer.println(
-                endpointList.stream()
-                    .map(endpoint -> String.format("\t\t%s", endpoint.getControllerName()))
+                    Stream.concat(
+                        Stream.of("\t\tServiceRequestManager"),
+                        endpointList.stream()
+                            .map(endpoint -> String.format("\t\t%s", endpoint.getControllerName()))
+                    )
                     .collect(Collectors.joining(",\n"))
             );
             writer.println("\t]");
