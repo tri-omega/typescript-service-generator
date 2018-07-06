@@ -59,7 +59,7 @@ public class ModuleEmitter {
             writer.println("\tproviders: [");
             writer.println(
                     Stream.concat(
-                        Stream.of("\t\tServiceRequestManager"),
+                        Stream.of("\t\t" + context.getGenConfig().getDefaultHttpClassName()),
                         endpointList.stream()
                             .map(endpoint -> String.format("\t\t%s", endpoint.getControllerName()))
                     )
