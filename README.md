@@ -1,4 +1,4 @@
-#Type Script Service Generator
+# Type Script Service Generator
   
 Compile time library to auto-generate TypeScript services for Spring MVC controllers and interfaces for all the return and parameter types
 to be used in Angular client side projects.
@@ -6,7 +6,7 @@ to be used in Angular client side projects.
 The library relies on Angular HttpClient service to handle the networking layer requiring zero initial special efforts for configuration of 
 client-server interaction.
 
-###Key Features
+### Key Features
 
 The library supports advanced features of Java type system and Spring Framework:
 * Out of the box Spring MVC annotation support
@@ -23,14 +23,14 @@ The library supports advanced features of Java type system and Spring Framework:
 * Flexible filtering for input types to prevent _"type number bomb"_
 * Configurable replacement for the default HttpClient based network layer implementation with custom client code 
 
-##Design philosophy
+## Design philosophy
 
 1. Minimal upfront config
 2. Convention over configuration
 3. Customization points for advanced use cases
 4. Generate proper TypeScript semantics where they differ from Java  
 
-##Getting started
+## Getting started
 
 The library utilizes Java Annotation Processing facilities ([JSR-269](https://www.jcp.org/en/jsr/detail?id=269))  
 to process the source code at compile time and generate corresponding TypeScript representations.
@@ -43,7 +43,7 @@ should be sufficient in the default environment.
 
 The recommended way to integrate the library into the project is to ase APT plugin for the popular build tools.
 
-####Gradle Example
+#### Gradle Example
 
 ````build.gradle:````
 ```groovy
@@ -57,7 +57,7 @@ annotationProcessor('org.springframework:spring-web')
 annotationProcessor group: "org.omega", name: "typescript-service-generator", version: "0.1"
 ```
 
-####Source code 
+#### Source code 
 
 The minimal required configuration is to mark a controller with the annotation ```@TypeScriptEndpoint```. This will generate
 corresponding Angular service class for this controller and type interfaces for any return or parameter types with a default module definition 
@@ -106,7 +106,7 @@ export interface SimpleDto {
 }
 ```
 
-###Output configuration
+### Output configuration
 
 The library is configured by placing a ```tsg-config.properties``` file on the with the source code:
 ```properties 
@@ -122,7 +122,7 @@ In this example the properties specify that:
  
 ```Note:``` Any unknown property is treated as a package override. 
     
- ###Advanced Configuration properties
+ ### Advanced Configuration properties
  
  A full list of configuration properties:
  
@@ -142,7 +142,7 @@ In this example the properties specify that:
 | tsg.java-time.date-type | _LocalDate_ TypeScript alias | string |
 | tsg.exclude-classes-regex._{uniqueId}_ | A set of regex expressions to exclude classes by name. There can be any number of exclusions, but configuration with same _uniqueId_ overrides defaults (can be used to change defaults). | tsg.exclude-classes-regex.io=java\\.io\\..+ |
 
-##Contacts
+## Contacts
 Author: William Frank
 
 For questions and suggestiosn please contact at [info@williamfrank.net](mailto:info@williamfrank.net)   
