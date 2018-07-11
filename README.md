@@ -108,3 +108,41 @@ export interface SimpleDto {
 
 ###Output configuration
 
+The library is configured by placing a ```tsg-config.properties``` file on the with the source code:
+```properties 
+tsg.output-folder=build/gen/
+
+org.omega.typescript.processor.test=api/service
+```
+
+In this example the properties specify that:
+1. TypeScript output should be emitted into the folder ```build/gen``` 
+2. package ```org.omega.typescript.processor.test``` should be shortened to api/service. _Example_: class name
+    ```org.omega.typescript.processor.test.dto.SimpleDto``` will be emitted as ```api/service/dto/SimpleDto.generated.ts```
+ 
+```Note:``` Any unknown property is treated as a package override. 
+    
+ ###Advanced Configuration properties
+ 
+ A full list of configuration properties:
+ 
+| Property      | Description           | Default   |
+| --------------|-----------------------|-----------|
+| tsg.output-folder | base folder to emit TypeScript to | tsg-gen/ | 
+| tsg.default-module-name | name for the default module | api |
+| tsg.http-service-class | Class name for the network layer service | ServiceRequestManager |
+| tsg.http-service-include | Import path for the network layer service | tsg-std/ServiceRequestManager |
+| tsg.service-includes | Additional imports for service classes. Allows to customize the library type imports | Import {Injectable} from '@angular/core'; import {Observable} from 'rxjs'; |
+| tsg.std-api-file-name | File name to emit support library classes to | tsg-std/api.ts |
+| tsg.request-manager-file-name | File name to emit the standard _ServiceRequestManager_ service | tsg-std/ServiceRequestManager.ts |
+| tsg.enable-java-time-integration | Enable or disable special type overrides for Java 8 Time classes | true |
+| tsg.java-time.zoned-date-time-type | _java.time.ZonedDateTime_ TypeScript alias | number |
+| tsg.java-time.local-date-time-type | _java.time.LocalDateTime_ TypeScript alias | string |
+| tsg.java-time.time-type | _java.time.LocalTime_ TypeScript alias | string |
+| tsg.java-time.date-type | _LocalDate_ TypeScript alias | string |
+| tsg.exclude-classes-regex._{uniqueId}_ | A set of regex expressions to exclude classes by name. There can be any number of exclusions, but configuration with same _uniqueId_ overrides defaults (can be used to change defaults). | tsg.exclude-classes-regex.io=java\\.io\\..+ |
+
+##Contacts
+Author: William Frank
+
+For questions and suggestiosn please contact at [info@williamfrank.net](mailto:info@williamfrank.net)   
