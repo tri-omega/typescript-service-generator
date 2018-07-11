@@ -142,7 +142,9 @@ In this example the properties specify that:
 | tsg.java-time.date-type | _LocalDate_ TypeScript alias | string |
 | tsg.exclude-classes-regex._{uniqueId}_ | A set of regex expressions to exclude classes by name. There can be any number of exclusions, but configuration with same _uniqueId_ overrides defaults (can be used to change defaults). | tsg.exclude-classes-regex.io=java\\.io\\..+ |
 
-## Contacts
+## Contacts & Licensing
 Author: William Frank
+
+Lincense: [MIT License](https://en.wikipedia.org/wiki/MIT_License)
 
 For questions and suggestiosn please contact at [info@williamfrank.net](mailto:info@williamfrank.net)   
