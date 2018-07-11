@@ -104,7 +104,7 @@ public final class EndpointProcessorSingleton {
     private List<TypeElement> collectRoundEndpoints(RoundEnvironment roundEnv) {
         final Set<? extends Element> annotated = roundEnv.getElementsAnnotatedWith(TypeScriptEndpoint.class);
         return annotated.stream()
-                .filter(element -> ElementKind.CLASS.equals(element.getKind()))
+                .filter(element -> ElementKind.CLASS.equals(element.getKind()) || ElementKind.INTERFACE.equals(element.getKind()))
                 .map(element -> (TypeElement) element)
                 .collect(toList());
     }
