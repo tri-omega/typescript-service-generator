@@ -36,6 +36,7 @@ plugins {
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 
@@ -72,7 +73,6 @@ sourceSets {
     }
 }
 
-
 dependencies {
     compileOnly("org.springframework:spring-webmvc:${versions.spring}")
 
@@ -91,3 +91,66 @@ dependencies {
     testApt "org.projectlombok:lombok:${versions.lombok}"
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'TypeScript Service Generator'
+                packaging 'jar'
+
+                description 'Compile time library to auto-generate TypeScript services for Spring MVC controllers and ' +
+                        'interfaces for all the return and parameter types to be used in Angular client side projects'
+                url 'https://tri-omega.github.io/typescript-service-generator/'
+
+                scm {
+                    connection 'scm:git:git://github.com/tri-omega/typescript-service-generator.git'
+                    developerConnection 'scm:git:ssh://github.com:tri-omega/typescript-service-generator.git'
+                    url 'https://github.com/tri-omega/typescript-service-generator.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'william.frank'
+                        name 'William Frank'
+                        email 'info@williamfrank.net'
+                    }
+                }
+            }
+        }
+    }
+}
