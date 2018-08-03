@@ -31,6 +31,7 @@ import org.omega.typescript.processor.utils.TypeUtils;
 import javax.lang.model.element.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -50,12 +51,15 @@ public class JavaBeanPropertyLocator implements TypePropertyLocator {
     public List<PropertyDefinition> locateProperties(final TypeElement typeElement, final ProcessingContext context) {
         final List<ExecutableElement> methods = TypeUtils.getMethods(typeElement, context);
 
+        final Set<String> ignoredFields = getIgnoredFields(typeElement, context);
+
         //Selects only "own" getters of the class
         final List<ExecutableElement> getters = methods.stream()
                 .filter(e -> e.getEnclosingElement() == typeElement)
                 .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
                 .filter(e -> !e.getModifiers().contains(Modifier.TRANSIENT))
                 .filter(e -> !AnnotationUtils.getAnnotation(e, TypeScriptIgnore.class).isPresent())
+                .filter(e -> !ignoredFields.contains(buildPropertyName(e, context)))
                 .filter(this::isGetter)
                 .collect(Collectors.toList());
 
@@ -66,6 +70,16 @@ public class JavaBeanPropertyLocator implements TypePropertyLocator {
                 )
                 .collect(Collectors.toList());
 
+    }
+
+    private Set<String> getIgnoredFields(TypeElement typeElement, ProcessingContext context) {
+        return TypeUtils.getMembers(typeElement, ElementKind.FIELD, context).stream()
+                    .filter(e -> e.getEnclosingElement() == typeElement)
+                    .filter(e -> !e.getModifiers().contains(Modifier.TRANSIENT))
+                    .filter(e -> AnnotationUtils.getAnnotation(e, TypeScriptIgnore.class).isPresent())
+                    .filter(e -> !e.getModifiers().contains(Modifier.STATIC))
+                    .map(e -> e.getSimpleName().toString())
+                    .collect(Collectors.toSet());
     }
 
     private boolean isGetter(final ExecutableElement e) {
