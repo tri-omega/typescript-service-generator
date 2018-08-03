@@ -59,8 +59,8 @@ public class JavaBeanPropertyLocator implements TypePropertyLocator {
                 .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
                 .filter(e -> !e.getModifiers().contains(Modifier.TRANSIENT))
                 .filter(e -> !AnnotationUtils.getAnnotation(e, TypeScriptIgnore.class).isPresent())
-                .filter(e -> !ignoredFields.contains(buildPropertyName(e, context)))
                 .filter(this::isGetter)
+                .filter(e -> !ignoredFields.contains(buildPropertyName(e, context)))
                 .collect(Collectors.toList());
 
         return getters.stream()
