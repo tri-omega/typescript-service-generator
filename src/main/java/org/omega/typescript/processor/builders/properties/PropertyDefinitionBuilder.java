@@ -55,19 +55,15 @@ public class PropertyDefinitionBuilder {
     }
 
     private Iterable<TypePropertyLocator> getPropertyLocators(ProcessingContext context) {
-        final ServiceLoader<TypePropertyLocator> services = ServiceLoader.load(TypePropertyLocator.class);
-        if (!services.iterator().hasNext()) {
-            //Well, load the services at least manually
-            final String content = IOUtils.readClasspathResource("META-INF/services/" + TypePropertyLocator.class.getName(), context);
-            return Arrays.stream(content.split("\n"))
-                    .map(String::trim)
-                    .filter(StringUtils::hasText)
-                    .map(this::createService)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-        } else {
-            return services;
-        }
+        //Well, load the services at least manually
+        final String content = IOUtils.readClasspathResource("META-INF/services/" + TypePropertyLocator.class.getName(), context);
+        return Arrays.stream(content.split("\n"))
+                .map(String::trim)
+                .filter(StringUtils::hasText)
+                .filter(s -> !s.startsWith("#"))
+                .map(this::createService)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private TypePropertyLocator createService(final String className) {
@@ -75,7 +71,7 @@ public class PropertyDefinitionBuilder {
             final Object instance = Class.forName(className).newInstance();
             return (TypePropertyLocator)instance;
         } catch (Exception e) {
-            context.error("Failed to instantiate service " + className + "\n" + StringUtils.exceptionToString(e));
+            context.warning("Failed to instantiate service " + className + "\n" + StringUtils.exceptionToString(e));
             return null;
         }
     }
