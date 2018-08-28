@@ -52,9 +52,9 @@ plugins {
 }
 
 //TypeScript endpoint Processing
-compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.3"
+compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.4"
 annotationProcessor('org.springframework:spring-web')
-annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.3"
+annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.4"
 ```
 
 #### Source code 
@@ -134,6 +134,7 @@ In this example the properties specify that:
 | tsg.http-service-include | Import path for the network layer service | tsg-std/ServiceRequestManager |
 | tsg.service-includes | Additional imports for service classes. Allows to customize the library type imports | Import {Injectable} from '@angular/core'; import {Observable} from 'rxjs'; |
 | tsg.std-api-file-name | File name to emit support library classes to | tsg-std/api.ts |
+| tsg.indent.width | Number of spaces to indent generated code blocks | 2 |
 | tsg.request-manager-file-name | File name to emit the standard _ServiceRequestManager_ service | tsg-std/ServiceRequestManager.ts |
 | tsg.enable-java-time-integration | Enable or disable special type overrides for Java 8 Time classes | true |
 | tsg.java-time.zoned-date-time-type | _java.time.ZonedDateTime_ TypeScript alias | number |
