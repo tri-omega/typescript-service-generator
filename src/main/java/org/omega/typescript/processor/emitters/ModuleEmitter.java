@@ -66,7 +66,7 @@ public class ModuleEmitter {
 
         try (PrintWriter writer = context.getStorageStrategy().createWriter(context.getNamingStrategy().getFullModuleName(moduleName))) {
             writer.println("import {NgModule} from '@angular/core';\n");
-            writer.printf("import {%s} from \"%s\";\n", config.getDefaultHttpClassName(), getHttpServiceInclude());
+            writer.printf("import {%s} from '%s';\n", config.getDefaultHttpClassName(), getHttpServiceInclude());
 
             final List<Endpoint> endpointList = endpoints.stream()
                     .sorted(Comparator.comparing(Endpoint::getControllerName))

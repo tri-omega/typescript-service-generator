@@ -52,9 +52,9 @@ plugins {
 }
 
 //TypeScript endpoint Processing
-compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.4"
+compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.5"
 annotationProcessor('org.springframework:spring-web')
-annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.4"
+annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.5"
 ```
 
 #### Source code 
