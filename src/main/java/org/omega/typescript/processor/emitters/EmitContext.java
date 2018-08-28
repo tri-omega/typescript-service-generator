@@ -28,6 +28,7 @@ import org.omega.typescript.processor.services.FileNamingStrategy;
 import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.services.StorageStrategy;
 import org.omega.typescript.processor.utils.LogUtil;
+import org.omega.typescript.processor.utils.RenderUtils;
 
 /**
  * Created by kibork on 5/2/2018.
@@ -49,6 +50,8 @@ public class EmitContext {
 
     private final GenConfig genConfig;
 
+    private final String indent;
+
     // ------------------ Properties --------------------
 
 
@@ -61,6 +64,7 @@ public class EmitContext {
         this.storageStrategy = storageStrategy;
         this.instanceRenderer = new TypeInstanceEmitter(this);
         this.genConfig = processingContext.getGenConfig();
+        this.indent = RenderUtils.indent(genConfig.getIndentWidth());
     }
 
     public void debug(final String msg) {
@@ -73,6 +77,14 @@ public class EmitContext {
 
     public void error(final String msg) {
         LogUtil.error(processingContext.getProcessingEnv(), msg);
+    }
+
+    public String indent() {
+        return indent;
+    }
+
+    public String indent(final long count) {
+        return RenderUtils.indent(genConfig.getIndentWidth(), count);
     }
 
 }

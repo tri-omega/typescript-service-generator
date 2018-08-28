@@ -80,16 +80,16 @@ public class ModuleEmitter {
             }
 
             writer.println("@NgModule({");
-            writer.println("\tproviders: [");
+            writer.println(context.indent() + "providers: [");
             writer.println(
                     Stream.concat(
-                        Stream.of("\t\t" + config.getDefaultHttpClassName()),
+                        Stream.of(context.indent(2) + config.getDefaultHttpClassName()),
                         endpointList.stream()
-                            .map(endpoint -> String.format("\t\t%s", endpoint.getControllerName()))
+                            .map(endpoint -> String.format(context.indent(2) + "%s", endpoint.getControllerName()))
                     )
                     .collect(Collectors.joining(",\n"))
             );
-            writer.println("\t]");
+            writer.println(context.indent() + "]");
             writer.println("})");
             writer.printf("export class %s { }\n", getModuleClassName(moduleName));
 

@@ -66,7 +66,7 @@ public class InterfaceTypeEmitter extends BaseTypeEmitter {
         final TypeInstanceEmitter instanceRenderer = context.getInstanceRenderer();
 
         final String properties = definition.getProperties().stream()
-                .map(p -> "\t" + p.getName() + ": " + instanceRenderer.renderTypeInstance(p.getType()) + ";")
+                .map(p -> context.indent() + p.getName() + ": " + instanceRenderer.renderTypeInstance(p.getType()) + ";")
                 .collect(Collectors.joining("\n"));
         if (!properties.isEmpty()) {
             writer.append(properties);

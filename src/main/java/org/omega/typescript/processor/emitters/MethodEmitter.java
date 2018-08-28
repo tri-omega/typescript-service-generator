@@ -51,32 +51,32 @@ public class MethodEmitter {
     }
 
     public void renderMethod(final EndpointMethod method, final PrintWriter writer) {
-        writer.printf("\tpublic %s", method.getMethodName() + "(");
+        writer.printf(context.indent() + "public %s", method.getMethodName() + "(");
 
         writer.print(getParamDeclaration(method));
 
         writer.printf("): Observable<%s> {\n", context.getInstanceRenderer().renderTypeInstance(method.getReturnType()));
-        writer.printf("\t\tconst mapping:HttpRequestMapping = ");
+        writer.printf(context.indent(2) + "const mapping:HttpRequestMapping = ");
         renderMapping(writer, method.getMappingDefinition()).println(";");
 
         if (!method.getParams().isEmpty()) {
-            writer.println("\t\tconst params: MethodParamMapping[] = [");
+            writer.println(context.indent(2) + "const params: MethodParamMapping[] = [");
             writer.println(
                     method.getParams().stream()
                             .map(this::buildParamMapping)
                             .collect(Collectors.joining(",\n"))
             );
-            writer.println("\t\t];");
+            writer.println(context.indent(2) + "];");
         } else {
-            writer.println("\t\tconst params: MethodParamMapping[] = [];");
+            writer.println(context.indent(2) + "const params: MethodParamMapping[] = [];");
         }
-        writer.printf("\t\treturn this.httpService.execute(this.defaultRequestMapping, mapping, params);\n");
-        writer.println("\t}\n");
+        writer.printf(context.indent(2) + "return this.httpService.execute(this.defaultRequestMapping, mapping, params);\n");
+        writer.println(context.indent() + "}\n");
     }
 
     private String buildParamMapping(MethodParameter param) {
         final StringBuilder paramData = new StringBuilder();
-        paramData.append(String.format("\t\t\t{paramName: '%s', isRequired: %s, ",
+        paramData.append(String.format(context.indent(3) + "{paramName: '%s', isRequired: %s, ",
                 StringUtils.escapeString(param.getName(), "'"), hasRequiredMarker(param)));
         apendOption("pathVariableName", param.getPathVariableName(), paramData);
         apendOption("requestParameterName", param.getRequestParameterName(), paramData);
