@@ -55,7 +55,7 @@ public class EnumTypeEmitter extends BaseTypeEmitter {
         writer.printf("export enum %s {\n", enumDefinition.getTypeScriptName());
         final String body = enumDefinition.getEnumConstants()
                 .stream()
-                .map(c -> "\t" + c.getName() + " = '" + c.getName() + "'")
+                .map(c -> context.indent() + c.getName() + " = '" + c.getName() + "'")
                 .collect(Collectors.joining(",\n"));
         if (!body.isEmpty()) {
             writer.println(body);

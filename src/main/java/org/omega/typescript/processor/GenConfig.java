@@ -84,6 +84,8 @@ public class GenConfig {
 
     private Map<String, Pattern> excludedClasses = new HashMap<>();
 
+    private long indentWidth = 2;
+
     // ------------------ Properties --------------------
 
     public String getDefaultModuleName() {
@@ -168,6 +170,8 @@ public class GenConfig {
             dateType = value;
         } else if (propertyName.startsWith("exclude-classes-regex")) {
             addExcludeFilter(value, propertyName.substring("exclude-classes-regex".length()));
+        } else if ("indent.width".equalsIgnoreCase(propertyName)) {
+            indentWidth = Long.valueOf(value);
         } else {
             context.error(String.format("Unknown tsg property %s with value %s, tsg is a reserved prefix", propertyName, value));
         }

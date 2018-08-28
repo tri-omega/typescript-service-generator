@@ -111,7 +111,7 @@ public class EndpointEmitter {
         writer.println("@Injectable()");
         writer.printf("export class %s {\n\n", endpoint.getControllerName());
 
-        writer.printf("\tconstructor(private httpService:%s) { }\n\n", context.getGenConfig().getDefaultHttpClassName());
+        writer.printf(context.indent() + "constructor(private httpService:%s) { }\n\n", context.getGenConfig().getDefaultHttpClassName());
         renderDefaultMapping(endpoint, writer);
 
         endpoint.getEndpointMethods().forEach(method -> methodEmitter.renderMethod(method, writer));
@@ -120,7 +120,7 @@ public class EndpointEmitter {
     }
 
     private void renderDefaultMapping(final Endpoint endpoint, final PrintWriter writer) {
-        writer.print("\tdefaultRequestMapping:HttpRequestMapping = ");
+        writer.print(context.indent() + "defaultRequestMapping:HttpRequestMapping = ");
         if (endpoint.getMappingDefinition().isPresent()) {
             methodEmitter.renderMapping(writer, endpoint.getMappingDefinition().get()).println(";");
         } else {

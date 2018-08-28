@@ -66,4 +66,14 @@ public class RenderUtils {
         knownTypes.add(instance.getTypeDefinition());
         instance.getGenericTypeArguments().forEach(i -> visitTypeInstance(knownTypes, i));
     }
+
+    public static String indent(final long width, final long count) {
+        final char[] chars = new char[(int)(width * count)];
+        Arrays.fill(chars, ' ');
+        return new String(chars);
+    }
+
+    public static String indent(final long width) {
+        return indent(width, 1);
+    }
 }
