@@ -80,7 +80,7 @@ public class EndpointEmitter {
                         String.format("import {%s} from '%s';",
                                 context.getGenConfig().getDefaultHttpClassName(),
                                 getHttpServiceInclude(endpoint)),
-                        String.format("import {HttpRequestMapping,RequestMethod,MethodParamMapping} from '%s';",
+                        String.format("import {HttpRequestMapping, MethodParamMapping, RequestMethod} from '%s';",
                                 context.getNamingStrategy().getRelativeFileName(endpoint, getIncludeFileName())
                         )
 
