@@ -1,7 +1,5 @@
-import java.util.jar.JarFile
-
 /*
- * Copyright (c) 2018 William Frank (info@williamfrank.net)
+ * Copyright (c) 2018-2020 William Frank (info@williamfrank.net)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +20,10 @@ import java.util.jar.JarFile
  * SOFTWARE.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
-    }
-}
-
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'org.junit.platform.gradle.plugin'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -79,15 +67,15 @@ dependencies {
     compileOnly("org.springframework:spring-webmvc:${versions.spring}")
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
 
-    testCompile "com.google.guava:guava:${versions.guava}"
-    testCompile 'com.google.testing.compile:compile-testing:0.10'
+    testImplementation "com.google.guava:guava:${versions.guava}"
+    testImplementation 'com.google.testing.compile:compile-testing:0.18'
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:${versions.junit}")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:${versions.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${versions.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${versions.junit}")
 
-    testCompile("org.springframework:spring-webmvc:${versions.spring}")
+    testImplementation("org.springframework:spring-webmvc:${versions.spring}")
 
-    testCompile "org.projectlombok:lombok:${versions.lombok}"
+    testImplementation "org.projectlombok:lombok:${versions.lombok}"
     testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
 }
 
@@ -108,6 +96,10 @@ artifacts {
 signing {
     required { gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
+}
+
+test {
+    useJUnitPlatform()
 }
 
 ext.uploadUserName = project.hasProperty('ossrhUsername') ? ossrhUsername : ""
