@@ -39,10 +39,10 @@ repositories {
 }
 
 ext.versions = [
-        spring: '5+',
-        guava : '28.1-jre',
-        junit : '5.0.1',
-        lombok: '1+'
+        spring: '5.2.6.RELEASE',
+        guava : '29.0-jre',
+        junit : '5.6.2',
+        lombok: '1.18.12'
 ]
 
 idea {
