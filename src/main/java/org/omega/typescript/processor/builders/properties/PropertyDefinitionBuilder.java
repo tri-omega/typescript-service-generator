@@ -68,7 +68,7 @@ public class PropertyDefinitionBuilder {
 
     private TypePropertyLocator createService(final String className) {
         try {
-            final Object instance = Class.forName(className).newInstance();
+            final Object instance = Class.forName(className).getDeclaredConstructor().newInstance();
             return (TypePropertyLocator)instance;
         } catch (Exception e) {
             context.warning("Failed to instantiate service " + className + "\n" + StringUtils.exceptionToString(e));
