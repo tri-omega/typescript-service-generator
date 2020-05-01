@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * Created by kibork on 1/22/2018.
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedAnnotationTypes(value = {"org.omega.typescript.api.TypeScriptEndpoint"})
 public class ServiceEndpointProcessor extends AbstractProcessor {
 

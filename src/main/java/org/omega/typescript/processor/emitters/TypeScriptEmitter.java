@@ -26,9 +26,7 @@ import org.omega.typescript.processor.model.EndpointContainer;
 import org.omega.typescript.processor.model.TypeDefinition;
 import org.omega.typescript.processor.model.TypeKind;
 import org.omega.typescript.processor.model.TypeOracle;
-import org.omega.typescript.processor.services.FileStorageStrategy;
-import org.omega.typescript.processor.services.GenConfigBasedNamingStrategy;
-import org.omega.typescript.processor.services.ProcessingContext;
+import org.omega.typescript.processor.services.*;
 import org.omega.typescript.processor.utils.IOUtils;
 
 import java.util.HashMap;
@@ -61,12 +59,20 @@ public class TypeScriptEmitter implements Emitter {
 
         final GenConfigBasedNamingStrategy namingStrategy = new GenConfigBasedNamingStrategy(execContext);
 
-        this.context = new EmitContext(execContext, namingStrategy, new FileStorageStrategy(execContext, namingStrategy));
+        final StorageStrategy storageStrategy = getStorageStrategy(execContext, namingStrategy);
+        this.context = new EmitContext(execContext, namingStrategy, storageStrategy);
         addDefinitionRenderer(new InterfaceTypeEmitter(context));
         addDefinitionRenderer(new EnumTypeEmitter(context));
 
         endpointEmitter = new EndpointEmitter(context);
         moduleEmitter = new ModuleEmitter(context);
+    }
+
+    private StorageStrategy getStorageStrategy(final ProcessingContext execContext, final GenConfigBasedNamingStrategy namingStrategy) {
+        switch (execContext.getGenConfig().getStorageStrategy().toLowerCase()) {
+            case "javac": return new JavacStorageStrategy(execContext, namingStrategy);
+            default: return new FileStorageStrategy(execContext, namingStrategy);
+        }
     }
 
     private void addDefinitionRenderer(TypeDefinitionEmitter renderer) {
