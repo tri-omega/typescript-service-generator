@@ -108,7 +108,8 @@ public class InterfaceTypeEmitter extends BaseTypeEmitter {
         definition.getGenericTypeParams().stream()
             .flatMap(gp -> gp.getSuperTypes().stream())
             .forEach(i -> RenderUtils.visitTypeInstance(usedTypes, i));
-
+        //Don't add an import for itself
+        usedTypes.remove(definition);
         RenderUtils.<TypeDefinition>renderImports(usedTypes, writer, (d) -> context.getNamingStrategy().getRelativeFileName(definition, d));
     }
 
