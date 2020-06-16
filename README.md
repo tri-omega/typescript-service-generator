@@ -43,7 +43,7 @@ should be sufficient in the default environment.
 
 The recommended way to integrate the library into the project is to ase APT plugin for the popular build tools.
 
-#### Gradle Example
+#### Gradle Example Java 8
 
 ````build.gradle:````
 ```groovy
@@ -56,6 +56,20 @@ compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", 
 annotationProcessor('org.springframework:spring-web')
 annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.6"
 ```
+#### Gradle Example Java 11
+
+````build.gradle:````
+```groovy
+plugins {
+  id "net.ltgt.apt" version "0.21"
+}
+
+//TypeScript endpoint Processing
+compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.2.3"
+annotationProcessor('org.springframework:spring-web')
+annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.2.3"
+```
+
 
 #### Source code 
 
