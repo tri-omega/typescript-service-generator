@@ -58,12 +58,13 @@ public class MapBuilderTest {
                 .orElseThrow(() -> new IllegalStateException("Unable to find get method!"));
 
         final TypeInstanceDefinition mapDto = get.getReturnType();
-        assertEquals(5, mapDto.getProperties().size());
+        assertEquals(6, mapDto.getProperties().size());
 
         checkMapProperty(mapDto, "stringMap", "String", "Object");
         checkMapProperty(mapDto, "stringHashMap", "String", "Object");
         checkMapProperty(mapDto, "dtoMap", "Long", "SimpleDto");
         checkMapProperty(mapDto, "invalidMap", "SimpleDto", "String");
+        checkMapProperty(mapDto, "enumMap", "TestEnum", "String");
 
         {
             final PropertyDefinition arrayProperty = mapDto.getPropertyByName("untypedMap")

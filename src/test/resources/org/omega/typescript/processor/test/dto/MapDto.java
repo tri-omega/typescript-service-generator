@@ -24,8 +24,14 @@ public class MapDto {
 
     private Map<SimpleDto, String> invalidMap;
 
+    private Map<TestEnum, String> enumMap;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
+
+    public enum TestEnum {
+        TEST1, TEST2
+    }
 
 }

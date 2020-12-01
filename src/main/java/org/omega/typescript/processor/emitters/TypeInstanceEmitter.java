@@ -71,13 +71,13 @@ public class TypeInstanceEmitter {
 
     private String getMapInstance(final TypeInstanceDefinition instanceDefinition) {
         if (!instanceDefinition.getGenericTypeArguments().isEmpty()) {
-            final String collectionIndexType = getCollectionBaseType(instanceDefinition, 0);
+            final String collectionIndexType = getMapKeyType(instanceDefinition);
             if ((!"number".equals(collectionIndexType)) && (!"string".equals(collectionIndexType))) {
                 context.warning("Unable to use " + collectionIndexType + "as map index: TypeScript at this point prohibits maps of non indexable types");
                 return "{}";
             }
 
-            return "{ [index: " + collectionIndexType + "]: " + getCollectionBaseType(instanceDefinition, 1) + " }";
+            return "{ [" + getMapKeyName(instanceDefinition) + ": " + collectionIndexType + "]: " + getCollectionBaseType(instanceDefinition, 1) + " }";
         } else {
             return "{ }";
         }
@@ -92,4 +92,28 @@ public class TypeInstanceEmitter {
         }
         return baseTypeName;
     }
+
+    private String getMapKeyType(final TypeInstanceDefinition instanceDefinition) {
+        if (instanceDefinition.getGenericTypeArguments().size() > 0) {
+            final TypeInstanceDefinition typeInstanceDefinition = instanceDefinition.getGenericTypeArguments().get(0);
+            if (typeInstanceDefinition.getTypeKind() == TypeKind.ENUM) {
+                return "string";
+            }
+            return renderTypeInstance(typeInstanceDefinition);
+        } else {
+            return context.getProcessingContext().getTypeOracle().getAny().getTypeScriptName();
+        }
+    }
+
+    private String getMapKeyName(final TypeInstanceDefinition instanceDefinition) {
+        if (instanceDefinition.getGenericTypeArguments().size() > 0) {
+            final TypeInstanceDefinition typeInstanceDefinition = instanceDefinition.getGenericTypeArguments().get(0);
+            if (typeInstanceDefinition.getTypeKind() == TypeKind.ENUM) {
+                final String typeScriptName = typeInstanceDefinition.getTypeScriptName();
+                return typeScriptName.substring(0, 1).toLowerCase() + typeScriptName.substring(1);
+            }
+        }
+        return "index";
+    }
+
 }
