@@ -37,7 +37,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -71,6 +74,8 @@ public class GenConfig {
     private String additionalServiceIncludes = "#invalid#";
 
     private boolean enableJavaTimeIntegration = true;
+
+    private String storageStrategy = "javac";
 
     private String zonedDateTimeType;
 
@@ -168,6 +173,8 @@ public class GenConfig {
             timeType = value;
         } else if ("java-time.date-type".equals(propertyName)) {
             dateType = value;
+        } else if ("storage-strategy".equals(propertyName)) {
+            storageStrategy = value;
         } else if (propertyName.startsWith("exclude-classes-regex")) {
             addExcludeFilter(value, propertyName.substring("exclude-classes-regex".length()));
         } else if ("indent.width".equalsIgnoreCase(propertyName)) {

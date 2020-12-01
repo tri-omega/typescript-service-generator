@@ -25,6 +25,8 @@ package org.omega.typescript.processor.builders.properties;
 import org.omega.typescript.processor.model.PropertyDefinition;
 import org.omega.typescript.processor.services.ProcessingContext;
 import org.omega.typescript.processor.utils.IOUtils;
+import org.omega.typescript.processor.utils.LogUtil;
+import org.omega.typescript.processor.utils.ReflectionUtils;
 import org.omega.typescript.processor.utils.StringUtils;
 
 import javax.lang.model.element.TypeElement;
@@ -44,6 +46,8 @@ public class PropertyDefinitionBuilder {
 
     private final Iterable<TypePropertyLocator> locators;
 
+    private boolean printedServiceWarning = false;
+
     // ------------------ Properties --------------------
 
     // ------------------ Logic      --------------------
@@ -55,8 +59,34 @@ public class PropertyDefinitionBuilder {
     }
 
     private Iterable<TypePropertyLocator> getPropertyLocators(ProcessingContext context) {
+        try {
+            final ServiceLoader<TypePropertyLocator> serviceLocator = ReflectionUtils
+                    .callOnClass(ServiceLoader.class, null, "load",
+                            new Class<?>[] {Class.class, ClassLoader.class, Module.class},
+                            new Object[] {TypePropertyLocator.class, this.getClass().getClassLoader(), this.getClass().getModule()}
+                    );
+            final List<TypePropertyLocator> services = serviceLocator
+                    .stream()
+                    .map(ServiceLoader.Provider::get)
+                    .collect(Collectors.toList());
+
+            return services;
+        } catch (Exception e) {
+            if (!printedServiceWarning) {
+                LogUtil.warning(context.getProcessingEnv(), "Unable to use service interface. Try using resource loader.");
+                printedServiceWarning = true;
+            }
+        }
         //Well, load the services at least manually
-        final String content = IOUtils.readClasspathResource("META-INF/services/" + TypePropertyLocator.class.getName(), context);
+        try {
+            return readFromResourceFile(context);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Iterable<TypePropertyLocator> readFromResourceFile(ProcessingContext context) {
+        final String content = IOUtils.requireClasspathResource("META-INF/services/" + TypePropertyLocator.class.getName(), context);
         return Arrays.stream(content.split("\n"))
                 .map(String::trim)
                 .filter(StringUtils::hasText)
@@ -71,7 +101,7 @@ public class PropertyDefinitionBuilder {
             final Object instance = Class.forName(className).getDeclaredConstructor().newInstance();
             return (TypePropertyLocator)instance;
         } catch (Exception e) {
-            context.warning("Failed to instantiate service " + className + "\n" + StringUtils.exceptionToString(e));
+            context.warning("Failed to instantiate service class: " + className + " due to Exception\n" + StringUtils.exceptionToString(e));
             return null;
         }
     }

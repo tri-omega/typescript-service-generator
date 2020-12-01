@@ -61,10 +61,18 @@ public final class IOUtils {
 
     public static String readClasspathResource(final String name, final ProcessingContext context) {
         try {
+            return requireClasspathResource(name, context);
+        } catch (IllegalArgumentException ex) {
+            return "Error: " + StringUtils.exceptionToString(ex);
+        }
+    }
+
+    public static String requireClasspathResource(final String name, final ProcessingContext context) throws IllegalArgumentException {
+        try {
             final FileObject fileObject = context.getProcessingEnv().getFiler().getResource(StandardLocation.CLASS_PATH, "", name);
             return fileObject.getCharContent(true).toString();
         } catch (IOException ex) {
-            return "Error: " + StringUtils.exceptionToString(ex);
+            throw new IllegalArgumentException("Unable to find " + name, ex);
         }
     }
 }
