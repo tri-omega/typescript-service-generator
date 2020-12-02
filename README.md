@@ -1,9 +1,9 @@
 # Type Script Service Generator
   
-Compile time library to auto-generate TypeScript services for Spring MVC controllers and interfaces for all the return and parameter types
+Compile time library to auto-generate TypeScript models and RPC style services for Spring MVC controllers and interfaces for all the return and parameter types
 to be used in Angular client side projects.
 
-The library relies on Angular HttpClient service to handle the networking layer requiring zero initial special efforts for configuration of 
+By defaultThe the library uses Angular HttpClient service to handle the networking layer requiring zero initial special efforts for configuration of 
 client-server interaction.
 
 ### Key Features
@@ -18,14 +18,15 @@ The library supports advanced features of Java type system and Spring Framework:
   * **Inheritance** - supertypes and interfaces are mirrored as TypeScript interfaces 
   * **Generics** - generic type information is mirrored into TypeScript interfaces
   * **Enums** - represented as named enums in TypeScript
-  * Inner classes - are captured as prefixed classes
+  * Inner classes/enums/interfaces - are captured as prefixed classes
   * Java 8 Time classes support
-* Flexible filtering for input types to prevent _"type number bomb"_
-* Configurable replacement for the default HttpClient based network layer implementation with custom client code 
+  * Enums in map keys   
+  * Flexible filtering for input types to prevent _"type number bomb"_
+  * Configurable replacement for the default HttpClient based network layer implementation with custom client code 
 
 ## Design philosophy
 
-1. Minimal upfront config
+1. Minimal upfront config - works out of the box
 2. Convention over configuration
 3. Customization points for advanced use cases
 4. Generate proper TypeScript semantics where they differ from Java  
@@ -52,9 +53,9 @@ plugins {
 }
 
 //TypeScript endpoint Processing
-compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.6"
+compileOnly group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.2.4"
 annotationProcessor('org.springframework:spring-web')
-annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.1.6"
+annotationProcessor group: "io.github.tri-omega", name: "typescript-service-generator", version: "0.2.4"
 ```
 
 #### Source code 
