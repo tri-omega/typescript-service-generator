@@ -111,16 +111,33 @@ export interface SimpleDto {
 
 The library is configured by placing a ```tsg-config.properties``` file on the with the source code:
 ```properties 
-tsg.output-folder=build/gen/
+tsg.output-folder=angular-ui/src/service-api
 
 org.omega.typescript.processor.test=api/service
 ```
 
 In this example the properties specify that:
-1. TypeScript output should be emitted into the folder ```build/gen``` 
+1. TypeScript output should be emitted into the folder ```/build/generated/sources/annotationProcessor/java/main/angular-ui/src/service-api``` 
 2. package ```org.omega.typescript.processor.test``` should be shortened to api/service. _Example_: class name
     ```org.omega.typescript.processor.test.dto.SimpleDto``` will be emitted as ```api/service/dto/SimpleDto.generated.ts```
- 
+You can use the following Gradle Tasks to copy the files into Angular Code:
+   ````build.gradle:````
+```groovy
+clean.doFirst {
+    delete (fileTree("${project.projectDir}/angular-ui/src/service-api/") {
+        include "**/*.generated.ts"
+        include "service-api.module.ts"
+    })
+}
+
+compileJava.doLast {
+    copy {
+        from "${projectDir}/build/generated/sources/annotationProcessor/java/main/angular-ui/src/service-api"
+        into "${projectDir}/angular-ui/src/service-api"
+    }
+}
+```
+
 ```Note:``` Any unknown property is treated as a package override. 
     
  ### Advanced Configuration properties
