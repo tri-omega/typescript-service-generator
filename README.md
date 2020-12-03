@@ -120,7 +120,7 @@ In this example the properties specify that:
 1. TypeScript output should be emitted into the folder ```/build/generated/sources/annotationProcessor/java/main/angular-ui/src/service-api``` 
 2. package ```org.omega.typescript.processor.test``` should be shortened to api/service. _Example_: class name
     ```org.omega.typescript.processor.test.dto.SimpleDto``` will be emitted as ```api/service/dto/SimpleDto.generated.ts```
-You can use the following Gradle Tasks to copy the files into Angular Code:
+3. You can use the following Gradle Tasks to copy the files into Angular Code:
    ````build.gradle:````
 ```groovy
 clean.doFirst {
